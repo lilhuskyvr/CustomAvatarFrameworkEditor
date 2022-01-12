@@ -1,0 +1,118 @@
+{
+  "$type": "ThunderRoad.WaveData, ThunderRoad",
+  "id": "Uniforms3",
+  "saveFolder": "bas",
+  "version": 2,
+  "category": "1Uniforms",
+  "title": "3 Uniforms",
+  "description": "3 Uniforms",
+  "loop": true,
+  "maxAlive": 3,
+  "alwaysAvailable": true,
+  "waveSelectors": [
+    "Arena",
+    "Ruins",
+    "Market",
+    "Canyon",
+    "Citadel"
+  ],
+  "playerHealthMultiplier": 1.0,
+  "enemiesHealthMultiplier": 1.0,
+  "groups": [
+    {
+      "reference": "Creature",
+      "referenceID": "Uniform",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "Uniform",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "Uniform",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "Uniform",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "Uniform",
+      "overrideFaction": false,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "$type": "ThunderRoad.ContainerData, ThunderRoad",
+  "id": "NPCDaemonGirl_Prestigious",
+  "saveFolder": "Bas",
+  "version": 1,
+  "displayName": "",
+  "description": null,
+  "contents": [
+    {
+      "$type": "ThunderRoad.ContainerData+Content, ThunderRoad",
+      "referenceID": "ApparelDaemonGirl_Prestigious",
+      "reference": "Item",
+      "customValues": []
+    },
+    {
+      "$type": "ThunderRoad.ContainerData+Content, ThunderRoad",
+      "referenceID": "Weapon1H",
+      "reference": "Table",
+      "customValues": [
+        {
+          "$type": "ThunderRoad.Item+SavedValue, ThunderRoad",
+          "id": "Holder",
+          "value": "BackRight"
+        }
+      ]
+    }
+  ]
+}

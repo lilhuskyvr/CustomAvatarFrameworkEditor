@@ -1,0 +1,118 @@
+{
+  "$type": "ThunderRoad.WaveData, ThunderRoad",
+  "id": "DaemonGirl_FullClothess3",
+  "saveFolder": "bas",
+  "version": 2,
+  "category": "1DaemonGirl_FullClothess",
+  "title": "3 DaemonGirl_FullClothess",
+  "description": "3 DaemonGirl_FullClothess",
+  "loop": true,
+  "maxAlive": 3,
+  "alwaysAvailable": true,
+  "waveSelectors": [
+    "Arena",
+    "Ruins",
+    "Market",
+    "Canyon",
+    "Citadel"
+  ],
+  "playerHealthMultiplier": 1.0,
+  "enemiesHealthMultiplier": 1.0,
+  "groups": [
+    {
+      "reference": "Creature",
+      "referenceID": "DaemonGirl_FullClothes",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "DaemonGirl_FullClothes",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "DaemonGirl_FullClothes",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "DaemonGirl_FullClothes",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "DaemonGirl_FullClothes",
+      "overrideFaction": false,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    }
+  ]
+}

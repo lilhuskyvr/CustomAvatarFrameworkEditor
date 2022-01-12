@@ -1,0 +1,118 @@
+{
+  "$type": "ThunderRoad.WaveData, ThunderRoad",
+  "id": "JadeTheVixens2",
+  "saveFolder": "bas",
+  "version": 2,
+  "category": "1JadeTheVixens",
+  "title": "2 JadeTheVixens",
+  "description": "2 JadeTheVixens",
+  "loop": true,
+  "maxAlive": 2,
+  "alwaysAvailable": true,
+  "waveSelectors": [
+    "Arena",
+    "Ruins",
+    "Market",
+    "Canyon",
+    "Citadel"
+  ],
+  "playerHealthMultiplier": 1.0,
+  "enemiesHealthMultiplier": 1.0,
+  "groups": [
+    {
+      "reference": "Creature",
+      "referenceID": "JadeTheVixen",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "JadeTheVixen",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "JadeTheVixen",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "JadeTheVixen",
+      "overrideFaction": true,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    },
+    {
+      "reference": "Creature",
+      "referenceID": "JadeTheVixen",
+      "overrideFaction": false,
+      "factionID": 5,
+      "overrideContainer": false,
+      "overrideContainerID": "Gladiator1H",
+      "overrideBrain": false,
+      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "minMaxCount": {
+        "x": 2,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "conditionStepIndex": -1,
+      "conditionThreshold": 0
+    }
+  ]
+}

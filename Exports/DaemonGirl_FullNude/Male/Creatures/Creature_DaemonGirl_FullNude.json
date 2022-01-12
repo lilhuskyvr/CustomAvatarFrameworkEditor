@@ -1,0 +1,622 @@
+{
+  "$type": "ThunderRoad.CreatureData, ThunderRoad",
+  "id": "DaemonGirl_FullNude",
+  "saveFolder": "bas",
+  "version": 6,
+  "pooledCount": 20,
+  "androidPooledCount": 5,
+  "name": "HumanMale",
+  "displayName": "{Human}",
+  "prefabAddress": "Bas.Creature.HumanMale",
+  "removeMeshWhenPooled": false,
+  "gender": "Male",
+  "health": 50,
+  "mana": 100.0,
+  "manaRegen": 5.0,
+  "focus": 30.0,
+  "focusRegen": 2.0,
+  "baseXP": 20,
+  "overlapRadius": 5.0,
+  "overlapMinDelay": 0.5,
+  "overlapMask": -1929369600,
+  "containerID": "NPCDaemonGirl_FullNude",
+  "factionId": 3,
+  "brainId": "HumanMedium",
+  "avoidancePriority": 10,
+  "voices": [
+    "HumanMale1"
+  ],
+  "openHandPoseId": "DefaultOpen",
+  "closeHandPoseId": "DefaultClose",
+  "randomMinHeight": 1.7,
+  "randomMaxHeight": 1.9,
+  "adjustHeightToPlayer": true,
+  "adjustHeightToPlayerDelta": 0.05,
+  "possesionScaling": "ScaleCreature",
+  "hairColors": [
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.2,
+        "g": 0.06666667,
+        "b": 0.0117647061,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "specular": {
+        "r": 0.137254909,
+        "g": 0.07058824,
+        "b": 0.0431372561,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.101960793,
+        "g": 0.054901965,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 0.0
+      },
+      "specular": {
+        "r": 0.101960793,
+        "g": 0.0509803966,
+        "b": 0.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.4056604,
+        "g": 0.1494916,
+        "b": 0.0440103337,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "specular": {
+        "r": 0.235294119,
+        "g": 0.141176477,
+        "b": 0.101960786,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.5,
+        "g": 0.341293246,
+        "b": 0.2759434,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "specular": {
+        "r": 0.168627456,
+        "g": 0.168627456,
+        "b": 0.168627456,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.349019617,
+        "g": 0.274509817,
+        "b": 0.274509817,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "specular": {
+        "r": 0.121568635,
+        "g": 0.101960793,
+        "b": 0.101960793,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.7960785,
+        "g": 0.435294151,
+        "b": 0.156862751,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 0.0
+      },
+      "specular": {
+        "r": 0.3019608,
+        "g": 0.196078449,
+        "b": 0.0980392247,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.6431373,
+        "g": 0.2784314,
+        "b": 0.121568635,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 0.0
+      },
+      "specular": {
+        "r": 0.3019608,
+        "g": 0.196078449,
+        "b": 0.0980392247,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 0.0
+      },
+      "specular": {
+        "r": 0.101960793,
+        "g": 0.101960793,
+        "b": 0.101960793,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+HairColor, ThunderRoad",
+      "main": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      },
+      "secondary": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 0.0
+      },
+      "specular": {
+        "r": 0.509803951,
+        "g": 0.509803951,
+        "b": 0.509803951,
+        "a": 1.0
+      }
+    }
+  ],
+  "eyesColors": [
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.6117647,
+        "g": 0.7294118,
+        "b": 1.0,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.396078467,
+        "g": 0.203921586,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.0274509825,
+        "g": 0.34117648,
+        "b": 0.0156862754,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.235294133,
+        "g": 0.3921569,
+        "b": 0.752941251,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.470588267,
+        "g": 0.5294118,
+        "b": 0.454902,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.0,
+        "g": 0.24313727,
+        "b": 0.282352954,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.2264151,
+        "g": 0.105392382,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.6226415,
+        "g": 0.344284147,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeColor, ThunderRoad",
+      "iris": {
+        "r": 0.5377358,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "sclera": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      }
+    }
+  ],
+  "skinColors": [
+    {
+      "r": 1.0,
+      "g": 1.0,
+      "b": 1.0,
+      "a": 1.0
+    },
+    {
+      "r": 1.0,
+      "g": 0.921568632,
+      "b": 0.843137264,
+      "a": 1.0
+    }
+  ],
+  "ragdollData": {
+    "$type": "ThunderRoad.CreatureData+RagdollData, ThunderRoad",
+    "meshRaycast": true,
+    "meshRaycastAdjustContactPoint": false,
+    "destabilizedSpringRotationMultiplier": 0.5,
+    "destabilizedDamperRotationMultiplier": 0.1,
+    "destabilizedGroundSpringRotationMultiplier": 0.1,
+    "fallAliveAnimationHeight": 0.5,
+    "fallAliveDestabilizeHeight": 5.0,
+    "groundStabilizationMaxVelocity": 1.0,
+    "groundStabilizationMinDuration": 0.5,
+    "gripMaxCloseWeight": 0.9,
+    "gripEffectId": "GripAndGrab",
+    "footItemId": "Foot",
+    "footTrackedItemId": "FootTracked",
+    "fingerSpeed": 5.0,
+    "bodyDefaultDamagerID": "Ragdoll",
+    "penetrationEffectId": "PenetrationBlood",
+    "penetrationEffectRepeatDistance": 0.06,
+    "parts": [
+      {
+        "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
+        "bodyPartTypes": "Head",
+        "bodyDamagerID": "RagdollHead",
+        "bodyAttackDamagerID": null,
+        "sliceParentEffectid": "SliceFleshParent",
+        "sliceChildEffectId": "SliceFleshChild",
+        "damageMultiplier": 2.0,
+        "penetrationPierceDeepDepth": 0.04,
+        "penetrationPierceDeepDamageMultiplier": 4.0,
+        "penetrationSlashDamageMultiplier": 2.0,
+        "penetrationSkewerDamageMultiplier": 4.0,
+        "penetrationDeepEffectId": "PenetrationDeepFlesh",
+        "sliceForceKill": true,
+        "sliceSeparationForce": 3.5,
+        "sliceVelocityMultiplier": 0.5
+      },
+      {
+        "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
+        "bodyPartTypes": "Neck",
+        "bodyDamagerID": "Ragdoll",
+        "bodyAttackDamagerID": null,
+        "sliceParentEffectid": "SliceFleshParent",
+        "sliceChildEffectId": "SliceFleshChild",
+        "damageMultiplier": 1.0,
+        "penetrationPierceDeepDepth": 0.02,
+        "penetrationPierceDeepDamageMultiplier": 4.0,
+        "penetrationSlashDamageMultiplier": 10.0,
+        "penetrationSkewerDamageMultiplier": 4.0,
+        "penetrationDeepEffectId": "PenetrationDeepBleeding",
+        "sliceForceKill": true,
+        "sliceSeparationForce": 3.0,
+        "sliceVelocityMultiplier": 0.5
+      },
+      {
+        "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
+        "bodyPartTypes": "Torso",
+        "bodyDamagerID": "Ragdoll",
+        "bodyAttackDamagerID": null,
+        "sliceParentEffectid": "SliceFleshParent",
+        "sliceChildEffectId": "SliceFleshChild",
+        "damageMultiplier": 1.0,
+        "penetrationPierceDeepDepth": 0.1,
+        "penetrationPierceDeepDamageMultiplier": 2.0,
+        "penetrationSlashDamageMultiplier": 1.0,
+        "penetrationSkewerDamageMultiplier": 3.0,
+        "penetrationDeepEffectId": "PenetrationDeepFlesh",
+        "sliceForceKill": true,
+        "sliceSeparationForce": 3.0,
+        "sliceVelocityMultiplier": 0.5
+      },
+      {
+        "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
+        "bodyPartTypes": "LeftHand, RightHand",
+        "bodyDamagerID": "Ragdoll",
+        "bodyAttackDamagerID": "Punch",
+        "sliceParentEffectid": "SliceFleshParent",
+        "sliceChildEffectId": "SliceFleshChild",
+        "damageMultiplier": 0.25,
+        "penetrationPierceDeepDepth": 0.04,
+        "penetrationPierceDeepDamageMultiplier": 0.25,
+        "penetrationSlashDamageMultiplier": 0.25,
+        "penetrationSkewerDamageMultiplier": 0.25,
+        "penetrationDeepEffectId": "PenetrationDeepFlesh",
+        "sliceForceKill": true,
+        "sliceSeparationForce": 3.0,
+        "sliceVelocityMultiplier": 0.5
+      },
+      {
+        "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
+        "bodyPartTypes": "LeftArm, RightArm",
+        "bodyDamagerID": "Ragdoll",
+        "bodyAttackDamagerID": null,
+        "sliceParentEffectid": "SliceFleshParent",
+        "sliceChildEffectId": "SliceFleshChild",
+        "damageMultiplier": 0.5,
+        "penetrationPierceDeepDepth": 0.1,
+        "penetrationPierceDeepDamageMultiplier": 0.5,
+        "penetrationSlashDamageMultiplier": 0.5,
+        "penetrationSkewerDamageMultiplier": 0.5,
+        "penetrationDeepEffectId": "PenetrationDeepFlesh",
+        "sliceForceKill": true,
+        "sliceSeparationForce": 3.0,
+        "sliceVelocityMultiplier": 0.5
+      },
+      {
+        "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
+        "bodyPartTypes": "LeftLeg, RightLeg",
+        "bodyDamagerID": "Ragdoll",
+        "bodyAttackDamagerID": null,
+        "sliceParentEffectid": "SliceFleshParent",
+        "sliceChildEffectId": "SliceFleshChild",
+        "damageMultiplier": 0.5,
+        "penetrationPierceDeepDepth": 0.1,
+        "penetrationPierceDeepDamageMultiplier": 0.5,
+        "penetrationSlashDamageMultiplier": 0.5,
+        "penetrationSkewerDamageMultiplier": 0.5,
+        "penetrationDeepEffectId": "PenetrationDeepFlesh",
+        "sliceForceKill": true,
+        "sliceSeparationForce": 3.0,
+        "sliceVelocityMultiplier": 0.5
+      },
+      {
+        "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
+        "bodyPartTypes": "LeftFoot, RightFoot",
+        "bodyDamagerID": "Ragdoll",
+        "bodyAttackDamagerID": "Kick",
+        "sliceParentEffectid": "SliceFleshParent",
+        "sliceChildEffectId": "SliceFleshChild",
+        "damageMultiplier": 0.25,
+        "penetrationPierceDeepDepth": 0.1,
+        "penetrationPierceDeepDamageMultiplier": 0.25,
+        "penetrationSlashDamageMultiplier": 0.25,
+        "penetrationSkewerDamageMultiplier": 0.25,
+        "penetrationDeepEffectId": "PenetrationDeepFlesh",
+        "sliceForceKill": true,
+        "sliceSeparationForce": 3.0,
+        "sliceVelocityMultiplier": 0.5
+      }
+    ]
+  },
+  "expressionAttackId": "Attack",
+  "expressionPainId": "Pain",
+  "expressionDeathId": "Death",
+  "expressionChokeId": "Choke",
+  "expressionAngryId": "Angry",
+  "forceMaxPosition": 3000.0,
+  "forceMaxRotation": 300.0,
+  "forcePositionSpringDamper": {
+    "x": 5000.0,
+    "y": 100.0
+  },
+  "forceRotationSpringDamper": {
+    "x": 1000.0,
+    "y": 50.0
+  },
+  "forcePositionSpringDamper2HMult": {
+    "x": 2.0,
+    "y": 1.0
+  },
+  "forceSpringDamper2HNoDomMult": {
+    "x": 2.0,
+    "y": 1.5
+  },
+  "forceRotationSpringDamper2HMult": {
+    "x": 2.0,
+    "y": 2.0
+  },
+  "climbingForceMaxPosition": 3000.0,
+  "climbingForceMaxRotation": 100.0,
+  "climbingForcePositionSpringDamperMult": {
+    "x": 1.0,
+    "y": 3.0
+  },
+  "gripForceMaxPosition": 3000.0,
+  "gripForceMaxRotation": 100.0,
+  "gripForcePositionSpringDamperMult": {
+    "x": 1.0,
+    "y": 1.0
+  },
+  "gripForceRotationSpringDamperMult": {
+    "x": 0.5,
+    "y": 1.0
+  },
+  "locomotionMass": 70.0,
+  "locomotionSpeed": 0.2,
+  "locomotionAirSpeed": 0.04,
+  "locomotionJumpForce": 0.3,
+  "locomotionJumpClimbVerticalMultiplier": 1.0,
+  "locomotionJumpClimbHorizontalMultiplier": 0.4,
+  "jumpClimbVerticalMaxVelocityRatio": 20.0,
+  "locomotionJumpMaxDuration": 0.6,
+  "locomotionBackwardSpeedMult": 1.0,
+  "locomotionStrafeSpeedMult": 1.0,
+  "locomotionRunSpeedMult": 1.5,
+  "locomotionGroundDrag": 3.0,
+  "locomotionFlyDrag": 0.3,
+  "playerFallDamageCurve": {
+    "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+    "keys": [
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 12.0,
+        "value": 0.0,
+        "inTangent": 0.0,
+        "outTangent": 25.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      },
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 20.0,
+        "value": 200.0,
+        "inTangent": 25.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      }
+    ],
+    "length": 2,
+    "preWrapMode": "ClampForever",
+    "postWrapMode": "ClampForever"
+  },
+  "playerFallDamageEffectId": "Fall",
+  "jumpEffectId": "Jump"
+}
