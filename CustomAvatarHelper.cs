@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CustomAvatarFramework.Editor.Items;
-using EasyButtons;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CustomAvatarHelper : MonoBehaviour
 {
@@ -18,21 +14,21 @@ public class CustomAvatarHelper : MonoBehaviour
         
     }
 
-    [Button("Map Bones")]
-    void MapBones()
-    {
-        GetComponent<CustomAvatar>().MapBones();
-    }
-    
-    [Button("Calibrate Character")]
-    void Resize3dModel()
-    {
-        GetComponent<CustomAvatar>().CalibrateCharacter();
-    }
-    
-    [Button("Generate JSON files")]
-    void GenerateJSONFiles()
-    {
-        GetComponent<CustomAvatar>().GenerateJSONFiles();
-    }
+    // [Button("Map Bones")]
+    // void MapBones()
+    // {
+    //     GetComponent<CustomAvatar>().MapBones();
+    // }
+    //
+    // [Button("Calibrate Character")]
+    // void Resize3dModel()
+    // {
+    //     GetComponent<CustomAvatar>().CalibrateCharacter();
+    // }
+    //
+    // [Button("Generate JSON files")]
+    // void GenerateJSONFiles()
+    // {
+    //     GetComponent<CustomAvatar>().GenerateJSONFiles();
+    // }
 }
