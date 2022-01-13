@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
+using System.Collections;
 using System.Collections.Generic;
-using CustomAvatarFramework;
+using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
 using ThunderRoad;
@@ -12,6 +13,7 @@ public class CustomAvatarMapper : MonoBehaviour
 {
     [HideInInspector] public GameObject baseGameObject;
 
+    public GameObject selectedImitatorGameObject;
     public GameObject imitatorGameObject;
 
     [HideInInspector] public RuntimeAnimatorController tPoseController;
@@ -77,15 +79,15 @@ public class CustomAvatarMapper : MonoBehaviour
         if (path == null)
             return;
 
-        var go = AssetDatabase.LoadAssetAtPath<GameObject>(path.ToUnityRelativePath());
+         selectedImitatorGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(path.ToUnityRelativePath());
 
-        if (go == null)
+        if (selectedImitatorGameObject == null)
         {
             EditorUtility.DisplayDialog("Error", "Unable to load file", "OK");
             return;
         }
 
-        imitatorGameObject = Instantiate(go, transform.position, transform.rotation);
+        imitatorGameObject = Instantiate(selectedImitatorGameObject, transform.position, transform.rotation);
 
         imitatorAnimator = imitatorGameObject.GetComponent<Animator>();
 
@@ -174,7 +176,7 @@ public class CustomAvatarMapper : MonoBehaviour
         if (sampleImitatorGameObject == null)
         {
             sampleImitatorGameObject =
-                Instantiate(imitatorGameObject, transform.position + transform.forward - transform.right,
+                Instantiate(selectedImitatorGameObject, transform.position + transform.forward - transform.right,
                     transform.rotation);
 
             sampleImitatorAnimator = sampleImitatorGameObject.GetComponent<Animator>();
@@ -185,13 +187,17 @@ public class CustomAvatarMapper : MonoBehaviour
 
     public void Build()
     {
-        var buildGameObject = Instantiate(imitatorGameObject);
+        var buildGameObject = Instantiate(selectedImitatorGameObject);
         var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
 
         buildGameObjectAnimator.runtimeAnimatorController = null;
 
         var itemGameObject = new GameObject();
         var item = itemGameObject.AddComponent<Item>();
+        foreach (var itemCollisionHandler in item.collisionHandlers)
+        {
+            DestroyImmediate(itemCollisionHandler);
+        }
         item.rb.isKinematic = true;
         var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
         customAvatar.animator = buildGameObjectAnimator;
@@ -203,8 +209,10 @@ public class CustomAvatarMapper : MonoBehaviour
         buildGameObject.transform.localPosition = Vector3.zero;
         buildGameObject.transform.localRotation = Quaternion.identity;
 
-        PrefabUtility.SaveAsPrefabAsset(itemGameObject,
-            Application.dataPath + "/CustomAvatarFramework/Exports/Kokoro/Kokoro.prefab");
+        PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject,
+            Application.dataPath + "/CustomAvatarFramework/Exports/Kokoro/Kokoro.prefab", InteractionMode.AutomatedAction);
+        
+        EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
     }
 
     private void Update()
@@ -252,6 +260,7 @@ public class CustomAvatarMapper : MonoBehaviour
         var yScale = baseHeight / imitatorHeight;
 
         imitatorGameObject.transform.localScale = new Vector3(zScale, yScale, zScale);
+        selectedImitatorGameObject.transform.localScale = new Vector3(zScale, yScale, zScale);
     }
 
     private float CalculateArmLength(Animator animator)
