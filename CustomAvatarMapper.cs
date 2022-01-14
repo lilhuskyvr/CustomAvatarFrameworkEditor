@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
@@ -12,9 +13,10 @@ using UnityEngine;
 public class CustomAvatarMapper : MonoBehaviour
 {
     [HideInInspector] public GameObject baseGameObject;
+    [HideInInspector] public GameObject selectedImitatorGameObject;
+    [HideInInspector] public GameObject imitatorGameObject;
 
-    public GameObject selectedImitatorGameObject;
-    public GameObject imitatorGameObject;
+    public string gameObjectName { get; set; }
 
     [HideInInspector] public RuntimeAnimatorController tPoseController;
     [HideInInspector] public RuntimeAnimatorController skinningTestController;
@@ -30,7 +32,7 @@ public class CustomAvatarMapper : MonoBehaviour
     [HideInInspector] public Animator sampleImitatorAnimator;
     // Start is called before the first frame update
 
-    [TextArea] public string bonesJSON;
+    [HideInInspector] public string bonesJSON;
 
     public Dictionary<string, Vector3> bones = new Dictionary<string, Vector3>();
 
@@ -47,7 +49,8 @@ public class CustomAvatarMapper : MonoBehaviour
         if (baseGameObject == null)
         {
             baseGameObject =
-                Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/CustomAvatarFramework/Resources/BaseMesh.prefab"),
+                Instantiate(
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/CustomAvatarFramework/Resources/BaseMesh.prefab"),
                     transform.position, transform.rotation);
         }
 
@@ -79,7 +82,7 @@ public class CustomAvatarMapper : MonoBehaviour
         if (path == null)
             return;
 
-         selectedImitatorGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(path.ToUnityRelativePath());
+        selectedImitatorGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(path.ToUnityRelativePath());
 
         if (selectedImitatorGameObject == null)
         {
@@ -187,6 +190,11 @@ public class CustomAvatarMapper : MonoBehaviour
 
     public void Build()
     {
+        var path = EditorUtility.OpenFolderPanel("Choose Folder", Application.dataPath, "");
+
+        if (path == null)
+            return;
+
         var buildGameObject = Instantiate(selectedImitatorGameObject);
         var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
 
@@ -198,6 +206,7 @@ public class CustomAvatarMapper : MonoBehaviour
         {
             DestroyImmediate(itemCollisionHandler);
         }
+
         item.rb.isKinematic = true;
         var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
         customAvatar.animator = buildGameObjectAnimator;
@@ -209,10 +218,61 @@ public class CustomAvatarMapper : MonoBehaviour
         buildGameObject.transform.localPosition = Vector3.zero;
         buildGameObject.transform.localRotation = Quaternion.identity;
 
-        PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject,
-            Application.dataPath + "/CustomAvatarFramework/Exports/Kokoro/Kokoro.prefab", InteractionMode.AutomatedAction);
+        var builtObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject,
+            path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab",
+            InteractionMode.AutomatedAction);
+
+        //JSON
+        GenerateJSONFiles(path);
+
+        AssetDatabase.Refresh();
+        EditorUtility.FocusProjectWindow();
+        Selection.activeObject = builtObject;
         
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
+    }
+    
+    public void GenerateJSONFiles(string path)
+    {
+        var directories = new Stack<string>();
+        var templatesPath = Application.dataPath + "/CustomAvatarFramework/Editor/Templates/AutoRig";
+        var prefabName = gameObject.name;
+        directories.Push(templatesPath);
+    
+        var files = new List<string>();
+    
+        while (directories.Count > 0)
+        {
+            var directory = directories.Pop();
+    
+            foreach (var newDirectory in Directory.GetDirectories(directory))
+            {
+                directories.Push(newDirectory);
+            }
+    
+            files.AddRange(Directory.GetFiles(directory));
+        }
+    
+    
+        var exportsPath = path.ToUnityRelativePath() + "/" + gameObjectName + "JSON";
+    
+        if (!Directory.Exists(exportsPath))
+            Directory.CreateDirectory(exportsPath);
+    
+        foreach (var file in files)
+        {
+            if (Path.GetExtension(file) == ".json")
+            {
+                var newFile = file.Replace(templatesPath, exportsPath);
+                newFile = newFile.Replace("CAF", gameObjectName);
+                var templateContent = File.ReadAllText(file);
+                var exportContent = templateContent.Replace("CAF", gameObjectName).Replace("[BONESJSON]", bonesJSON);;
+                var exportDirectory = Path.GetDirectoryName(newFile);
+                if (!Directory.Exists(exportDirectory))
+                    Directory.CreateDirectory(exportDirectory);
+                File.WriteAllText(newFile, exportContent);
+            }
+        }
     }
 
     private void Update()
@@ -255,8 +315,10 @@ public class CustomAvatarMapper : MonoBehaviour
 
         var imitatorHeight = CalculateHeight(imitatorAnimator);
 
+        //avatar width
         var zScale = baseArmLength / imitatorArmLength;
 
+        //avatar height
         var yScale = baseHeight / imitatorHeight;
 
         imitatorGameObject.transform.localScale = new Vector3(zScale, yScale, zScale);

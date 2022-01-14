@@ -1,0 +1,79 @@
+{
+  "$type": "ThunderRoad.ItemData, ThunderRoad",
+  "id": "ApparelCAF",
+  "saveFolder": "bas",
+  "version": 4,
+  "localizationId": null,
+  "displayName": "CAFAvatar",
+  "description": null,
+  "author": "lilhusky",
+  "price": 0.0,
+  "purchasable": false,
+  "tier": 0,
+  "levelRequired": 0,
+  "isStackable": false,
+  "categoryPath": [],
+  "iconEffectId": null,
+  "iconAddress": null,
+  "prefabAddress": "Bas.Item.Prop.WrappedFabric_01",
+  "pooledCount": 0,
+  "androidPooledCount": 0,
+  "type": "Wardrobe",
+  "slot": null,
+  "snapAudioContainerAddress": null,
+  "mass": 1.0,
+  "drag": 1.0,
+  "angularDrag": 1.0,
+  "manaRegenMultiplier": 1.0,
+  "spellChargeSpeedPlayerMultiplier": 1.0,
+  "spellChargeSpeedNPCMultiplier": 1.0,
+  "collisionMaxOverride": 0,
+  "collisionEnterOnly": false,
+  "collisionNoMinVelocityCheck": false,
+  "forceLayer": "None",
+  "flyFromThrow": false,
+  "flyRotationSpeed": 2.0,
+  "flyThrowAngle": 0.0,
+  "telekinesisSafeDistance": 1.0,
+  "telekinesisSpinEnabled": true,
+  "telekinesisThrowRatio": 1.0,
+  "grippable": false,
+  "customSnaps": [],
+  "modules": [
+    {
+      "$type": "CustomAvatarFramework.ItemModuleAvatar, CustomAvatarFramework",
+      "version": 2,
+      "avatarItemId": "CAF",
+      "avatarHeight": 1.0,
+      "extraHipPosition": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "extraDimension": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "bones": [BONESJSON]
+    },
+    {
+      "$type": "ThunderRoad.ItemModuleWardrobe, ThunderRoad",
+      "category": "Apparel",
+      "wardrobes": [
+        {
+          "creatureName": "HumanMale",
+          "wardrobeDataAddress": "Bas.Creature.Wardrobe.HumanMale.Bandit.Pants"
+        },
+        {
+          "creatureName": "HumanFemale",
+          "wardrobeDataAddress": "Bas.Creature.Wardrobe.HumanFemale.Bandit.Pants"
+        }
+      ]
+    }
+  ],
+  "colliderGroups": [],
+  "damagers": [],
+  "Interactables": [],
+  "effectHinges": [],
+  "whooshs": []
+}
