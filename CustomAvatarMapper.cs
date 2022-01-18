@@ -77,7 +77,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
     public void OpenFile()
     {
-        var path = EditorUtility.OpenFilePanel("Select model", Application.dataPath, "prefab");
+        var path = EditorUtility.OpenFilePanel("Select model", Application.dataPath, "prefab,fbx,dae,dxf,obj"); 
 
         if (path == null)
             return;
@@ -253,6 +253,12 @@ public class CustomAvatarMapper : MonoBehaviour
         buildGameObject.transform.SetParent(itemGameObject.transform);
         buildGameObject.transform.localPosition = Vector3.zero;
         buildGameObject.transform.localRotation = Quaternion.identity;
+        
+                
+        foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            skinnedMeshRenderer.updateWhenOffscreen = true;
+        }
 
         var builtObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject,
             path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab",
@@ -343,13 +349,13 @@ public class CustomAvatarMapper : MonoBehaviour
 
     public void ResizeCharacterModel()
     {
-        var baseArmLength = CalculateArmLength(baseAnimator);
+        var baseArmLength = CalculateArmLength(baseAnimator, "base");
 
-        var baseHeight = CalculateHeight(baseAnimator);
+        var baseHeight = CalculateHeight(baseAnimator, "base");
 
-        var imitatorArmLength = CalculateArmLength(imitatorAnimator);
+        var imitatorArmLength = CalculateArmLength(imitatorAnimator, "imitator");
 
-        var imitatorHeight = CalculateHeight(imitatorAnimator);
+        var imitatorHeight = CalculateHeight(imitatorAnimator, "imitator");
 
         //avatar width
         var zScale = baseArmLength / imitatorArmLength;
@@ -361,8 +367,40 @@ public class CustomAvatarMapper : MonoBehaviour
         selectedImitatorGameObject.transform.localScale = new Vector3(zScale, yScale, zScale);
     }
 
-    private float CalculateArmLength(Animator animator)
+    private float CalculateArmLength(Animator animator, string type)
     {
+        var defaultArmLength = 1;
+
+        if (animator == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator is null", "OK");
+            return defaultArmLength;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left middle distal bone", "OK");
+            return defaultArmLength;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.LeftLowerArm) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left lower arm bone", "OK");
+            return defaultArmLength;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.LeftUpperArm) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left upper arm bone", "OK");
+            return defaultArmLength;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.RightUpperArm) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have right upper arm bone", "OK");
+            return defaultArmLength;
+        }
+        
         var foreArmLength = Vector3.Distance(
             animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal).position,
             animator.GetBoneTransform(HumanBodyBones.LeftLowerArm).position
@@ -380,8 +418,47 @@ public class CustomAvatarMapper : MonoBehaviour
         return shoulderLength + (foreArmLength + armLength) * 2;
     }
 
-    private float CalculateHeight(Animator animator)
+    private float CalculateHeight(Animator animator, string type)
     {
+
+        var defaultHeight = 1;
+        
+        if (animator == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator is null", "OK");
+            return defaultHeight;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.LeftToes) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left toe bone", "OK");
+            return defaultHeight;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left lower leg bone", "OK");
+            return defaultHeight;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left upper leg bone", "OK");
+            return defaultHeight;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.Head) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have head bone", "OK");
+            return defaultHeight;
+        }
+        
+        if (animator.GetBoneTransform(HumanBodyBones.Hips) == null)
+        {
+            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have hips bone", "OK");
+            return defaultHeight;
+        }
+        
         var calfLength = Vector3.Distance(
             animator.GetBoneTransform(HumanBodyBones.LeftToes).position,
             animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg).position
