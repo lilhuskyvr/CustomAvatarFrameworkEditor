@@ -129,9 +129,45 @@ public class CustomAvatarMapper : MonoBehaviour
         LoadData();
     }
 
+    public bool ValidateGameObject(GameObject go, string type)
+    {
+        if (go == null)
+        {
+            EditorUtility.DisplayDialog("Error", string.Format("{0} game object is null", type), "OK");
+            return false;
+        }
+        
+        if (go == null)
+        {
+            EditorUtility.DisplayDialog("Error", type +" game object is null", "OK");
+            return false;
+        }
+        return true;
+    }
+    
+    public bool ValidateCalibrate()
+    {
+        if (baseAnimator == null)
+        {
+            EditorUtility.DisplayDialog("Error", "base animator is null", "OK");
+            return false;
+        }
+        
+        if (imitatorAnimator == null)
+        {
+            EditorUtility.DisplayDialog("Error", "imitator animator is null", "OK");
+            return false;
+        }
+        
+        return true;
+    }
+    
     public void Calibrate()
     {
         if (!Application.isPlaying)
+            return;
+        
+        if (!ValidateCalibrate())
             return;
 
         baseGameObject.transform.position = transform.position;
