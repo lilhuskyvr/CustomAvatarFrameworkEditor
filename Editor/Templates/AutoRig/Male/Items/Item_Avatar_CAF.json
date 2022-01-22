@@ -14,7 +14,7 @@
   "isStackable": false,
   "categoryPath": ["Avatars"],
   "iconEffectId": null,
-  "iconAddress": null,
+  "iconAddress": "CAFIcon",
   "prefabAddress": "CAF",
   "pooledCount": 0,
   "androidPooledCount": 0,

@@ -8,7 +8,9 @@ using Newtonsoft.Json;
 using ThunderRoad;
 using UniGLTF;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CustomAvatarMapper : MonoBehaviour
 {
@@ -244,6 +246,8 @@ public class CustomAvatarMapper : MonoBehaviour
         }
 
         item.rb.isKinematic = true;
+        item.preview.transform.position = buildGameObjectAnimator.GetBoneTransform(HumanBodyBones.Head).position;
+        item.preview.transform.localRotation = Quaternion.Euler(0, 180, 0);
         var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
         customAvatar.animator = buildGameObjectAnimator;
 
@@ -488,6 +492,13 @@ public class CustomAvatarMapper : MonoBehaviour
         }
 
         Debug.Log("Bone Mapping Completed Successfully");
+    }
+
+    [MenuItem("Lil Husky Studio/Custom Avatar Builder")]
+    public static void LoadScene()
+    {
+        EditorApplication.ExecuteMenuItem("Edit/Play");
+        EditorSceneManager.LoadSceneInPlayMode("Assets/CustomAvatarFramework/Scenes/LilHuskyBuilder.unity", new LoadSceneParameters());
     }
 }
 
