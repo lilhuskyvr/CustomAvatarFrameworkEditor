@@ -1,13 +1,15 @@
 ﻿#if UNITY_EDITOR
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
 using ThunderRoad;
 using UniGLTF;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.Experimental.SceneManagement;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -79,7 +81,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
     public void OpenFile()
     {
-        var path = EditorUtility.OpenFilePanel("Select model", Application.dataPath, "prefab,fbx,dae,dxf,obj"); 
+        var path = EditorUtility.OpenFilePanel("Select model", Application.dataPath, "prefab,fbx,dae,dxf,obj");
 
         if (path == null)
             return;
@@ -138,15 +140,16 @@ public class CustomAvatarMapper : MonoBehaviour
             EditorUtility.DisplayDialog("Error", string.Format("{0} game object is null", type), "OK");
             return false;
         }
-        
+
         if (go == null)
         {
-            EditorUtility.DisplayDialog("Error", type +" game object is null", "OK");
+            EditorUtility.DisplayDialog("Error", type + " game object is null", "OK");
             return false;
         }
+
         return true;
     }
-    
+
     public bool ValidateCalibrate()
     {
         if (baseAnimator == null)
@@ -154,21 +157,21 @@ public class CustomAvatarMapper : MonoBehaviour
             EditorUtility.DisplayDialog("Error", "base animator is null", "OK");
             return false;
         }
-        
+
         if (imitatorAnimator == null)
         {
             EditorUtility.DisplayDialog("Error", "imitator animator is null", "OK");
             return false;
         }
-        
+
         return true;
     }
-    
+
     public void Calibrate()
     {
         if (!Application.isPlaying)
             return;
-        
+
         if (!ValidateCalibrate())
             return;
 
@@ -257,8 +260,8 @@ public class CustomAvatarMapper : MonoBehaviour
         buildGameObject.transform.SetParent(itemGameObject.transform);
         buildGameObject.transform.localPosition = Vector3.zero;
         buildGameObject.transform.localRotation = Quaternion.identity;
-        
-                
+
+
         foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             skinnedMeshRenderer.updateWhenOffscreen = true;
@@ -269,42 +272,43 @@ public class CustomAvatarMapper : MonoBehaviour
             InteractionMode.AutomatedAction);
 
         //JSON
-        GenerateJSONFiles(path);
+        GenerateJsonFiles(path);
+        GenerateIcon(item, path.ToUnityRelativePath() + "/" + gameObjectName + "Icon.png");
 
         AssetDatabase.Refresh();
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = builtObject;
-        
+
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
     }
-    
-    public void GenerateJSONFiles(string path)
+
+    public void GenerateJsonFiles(string path)
     {
         var directories = new Stack<string>();
         var templatesPath = Application.dataPath + "/CustomAvatarFramework/Editor/Templates/AutoRig";
         var prefabName = gameObject.name;
         directories.Push(templatesPath);
-    
+
         var files = new List<string>();
-    
+
         while (directories.Count > 0)
         {
             var directory = directories.Pop();
-    
+
             foreach (var newDirectory in Directory.GetDirectories(directory))
             {
                 directories.Push(newDirectory);
             }
-    
+
             files.AddRange(Directory.GetFiles(directory));
         }
-    
-    
+
+
         var exportsPath = path.ToUnityRelativePath() + "/" + gameObjectName + "JSON";
-    
+
         if (!Directory.Exists(exportsPath))
             Directory.CreateDirectory(exportsPath);
-    
+
         foreach (var file in files)
         {
             if (Path.GetExtension(file) == ".json")
@@ -312,7 +316,8 @@ public class CustomAvatarMapper : MonoBehaviour
                 var newFile = file.Replace(templatesPath, exportsPath);
                 newFile = newFile.Replace("CAF", gameObjectName);
                 var templateContent = File.ReadAllText(file);
-                var exportContent = templateContent.Replace("CAF", gameObjectName).Replace("[BONESJSON]", bonesJSON);;
+                var exportContent = templateContent.Replace("CAF", gameObjectName).Replace("[BONESJSON]", bonesJSON);
+                ;
                 var exportDirectory = Path.GetDirectoryName(newFile);
                 if (!Directory.Exists(exportDirectory))
                     Directory.CreateDirectory(exportDirectory);
@@ -380,31 +385,31 @@ public class CustomAvatarMapper : MonoBehaviour
             EditorUtility.DisplayDialog("Error", $"{type} animator is null", "OK");
             return defaultArmLength;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left middle distal bone", "OK");
             return defaultArmLength;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.LeftLowerArm) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left lower arm bone", "OK");
             return defaultArmLength;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.LeftUpperArm) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left upper arm bone", "OK");
             return defaultArmLength;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.RightUpperArm) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have right upper arm bone", "OK");
             return defaultArmLength;
         }
-        
+
         var foreArmLength = Vector3.Distance(
             animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal).position,
             animator.GetBoneTransform(HumanBodyBones.LeftLowerArm).position
@@ -424,45 +429,44 @@ public class CustomAvatarMapper : MonoBehaviour
 
     private float CalculateHeight(Animator animator, string type)
     {
-
         var defaultHeight = 1;
-        
+
         if (animator == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator is null", "OK");
             return defaultHeight;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.LeftToes) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left toe bone", "OK");
             return defaultHeight;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left lower leg bone", "OK");
             return defaultHeight;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left upper leg bone", "OK");
             return defaultHeight;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.Head) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have head bone", "OK");
             return defaultHeight;
         }
-        
+
         if (animator.GetBoneTransform(HumanBodyBones.Hips) == null)
         {
             EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have hips bone", "OK");
             return defaultHeight;
         }
-        
+
         var calfLength = Vector3.Distance(
             animator.GetBoneTransform(HumanBodyBones.LeftToes).position,
             animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg).position
@@ -498,7 +502,22 @@ public class CustomAvatarMapper : MonoBehaviour
     public static void LoadScene()
     {
         EditorApplication.ExecuteMenuItem("Edit/Play");
-        EditorSceneManager.LoadSceneInPlayMode("Assets/CustomAvatarFramework/Scenes/LilHuskyBuilder.unity", new LoadSceneParameters());
+        EditorSceneManager.LoadSceneInPlayMode("Assets/CustomAvatarFramework/Scenes/LilHuskyBuilder.unity",
+            new LoadSceneParameters());
+    }
+
+    public void GenerateIcon(Item item, string path)
+    {
+        var iconResolution = 2048;
+
+        RuntimePreviewGenerator.MarkTextureNonReadable = false;
+        RuntimePreviewGenerator.BackgroundColor = new Color(0, 0, 0, 0);
+
+        var generatedIcon =
+            RuntimePreviewGenerator.GenerateModelPreview(item.transform, iconResolution, iconResolution, false, false);
+
+        byte[] bytes = generatedIcon.EncodeToPNG();
+        File.WriteAllBytes(path, bytes);
     }
 }
 
