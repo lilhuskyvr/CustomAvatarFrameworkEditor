@@ -9,6 +9,7 @@ using UniGLTF;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -267,22 +268,72 @@ public class CustomAvatarMapper : MonoBehaviour
             skinnedMeshRenderer.updateWhenOffscreen = true;
         }
 
-        var builtObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject,
-            path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab",
+        var avatarPath = path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab";
+        var iconPath = path.ToUnityRelativePath() + "/" + gameObjectName + "Icon.png";
+
+        var builtObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
             InteractionMode.AutomatedAction);
 
         //JSON
-        GenerateJsonFiles(path);
-        GenerateIcon(item, path.ToUnityRelativePath() + "/" + gameObjectName + "Icon.png");
+        GenerateJSONFiles(path);
+
+        GenerateIcon(item, iconPath);
 
         AssetDatabase.Refresh();
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = builtObject;
 
+        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+
+        if (settings == null)
+            return;
+
+        AddressableAssetGroup currentAddressableGroup = settings.FindGroup(gameObjectName);
+
+        if (currentAddressableGroup == null)
+        {
+
+            var defaultAddressableGroup = settings.FindGroup("Default");
+            
+            currentAddressableGroup = settings.CreateGroup(gameObjectName, false, false, true, defaultAddressableGroup.Schemas,
+                typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+        }
+
+        settings.DefaultGroup = currentAddressableGroup;
+
+        AddAssetToAddressableGroup(settings, avatarPath, gameObjectName);
+        AddAssetToAddressableGroup(settings, iconPath, gameObjectName + "Icon");
+
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
     }
 
-    public void GenerateJsonFiles(string path)
+    private void AddAssetToAddressableGroup(AddressableAssetSettings settings, string path, string addressName)
+    {
+        if (!settings.GetLabels().Contains("Windows"))
+        {
+            settings.AddLabel("Windows");
+        }
+
+        string guid = AssetDatabase.AssetPathToGUID(path);
+        AddressableAssetEntry entry = settings.FindAssetEntry(guid);
+
+        if (entry == null)
+        {
+            entry = settings.CreateOrMoveEntry(guid, settings.DefaultGroup);
+            settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, entry, true, false);
+        }
+
+        string prefabGuid = AssetDatabase.AssetPathToGUID(path);
+        AddressableAssetEntry prefabEntry = settings.FindAssetEntry(prefabGuid);
+
+        if (prefabEntry != null)
+        {
+            entry.SetLabel("Windows", true);
+            entry.SetAddress(addressName, false);
+        }
+    }
+
+    public void GenerateJSONFiles(string path)
     {
         var directories = new Stack<string>();
         var templatesPath = Application.dataPath + "/CustomAvatarFramework/Editor/Templates/AutoRig";
@@ -518,6 +569,16 @@ public class CustomAvatarMapper : MonoBehaviour
 
         byte[] bytes = generatedIcon.EncodeToPNG();
         File.WriteAllBytes(path, bytes);
+    }
+
+    public void OpenDiscord()
+    {
+        Application.OpenURL("https://discord.gg/RhtQmVh");
+    }
+
+    public void OpenPatreon()
+    {
+        Application.OpenURL("https://www.patreon.com/lilhuskyvr");
     }
 }
 
