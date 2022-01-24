@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using CustomAvatarFramework.Editor.Items;
@@ -10,10 +10,14 @@ using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
-using UnityEditor.Experimental.SceneManagement;
+using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+// ReSharper disable Unity.InefficientPropertyAccess
+// ReSharper disable CheckNamespace
+// ReSharper disable FieldCanBeMadeReadOnly.Global
 
 public class CustomAvatarMapper : MonoBehaviour
 {
@@ -23,8 +27,10 @@ public class CustomAvatarMapper : MonoBehaviour
 
     public string gameObjectName { get; set; }
 
-    [HideInInspector] public RuntimeAnimatorController tPoseController;
-    [HideInInspector] public RuntimeAnimatorController skinningTestController;
+    public AddressableAssetSettings settings;
+
+    [HideInInspector] public AnimatorController tPoseController;
+    [HideInInspector] public AnimatorController skinningTestController;
 
     [HideInInspector] public GameObject sampleBaseGameObject;
     [HideInInspector] public GameObject sampleImitatorGameObject;
@@ -37,7 +43,7 @@ public class CustomAvatarMapper : MonoBehaviour
     [HideInInspector] public Animator sampleImitatorAnimator;
     // Start is called before the first frame update
 
-    [HideInInspector] public string bonesJSON;
+    [HideInInspector] public string bonesJson;
 
     public Dictionary<string, Vector3> bones = new Dictionary<string, Vector3>();
 
@@ -47,6 +53,13 @@ public class CustomAvatarMapper : MonoBehaviour
     {
         transform.position = Vector3.zero;
         transform.rotation = Quaternion.identity;
+
+
+        settings = AddressableAssetSettingsDefaultObject.Settings;
+
+        if (settings != null)
+            return;
+        EditorUtility.DisplayDialog("Error", "Unable to load settings", "OK");
     }
 
     private void LoadData()
@@ -65,7 +78,7 @@ public class CustomAvatarMapper : MonoBehaviour
         {
             tPoseController =
                 Instantiate(
-                    AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                    AssetDatabase.LoadAssetAtPath<AnimatorController>(
                         "Assets/CustomAvatarFramework/Resources/TPose.controller"));
         }
 
@@ -73,7 +86,7 @@ public class CustomAvatarMapper : MonoBehaviour
         {
             skinningTestController =
                 Instantiate(
-                    AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                    AssetDatabase.LoadAssetAtPath<AnimatorController>(
                         "Assets/CustomAvatarFramework/Resources/SkinningTest.controller"));
         }
 
@@ -205,7 +218,7 @@ public class CustomAvatarMapper : MonoBehaviour
             bones[boneMapper.Key] = eulerAngle;
         }
 
-        bonesJSON = JsonConvert.SerializeObject(bones, Formatting.Indented);
+        bonesJson = JsonConvert.SerializeObject(bones, Formatting.Indented);
         mapped = true;
 
         if (sampleBaseGameObject == null)
@@ -236,6 +249,13 @@ public class CustomAvatarMapper : MonoBehaviour
 
         if (path == null)
             return;
+
+        StartCoroutine(BuildCoroutine(path));
+    }
+
+    public IEnumerator BuildCoroutine(string path)
+    {
+        yield return TryGenerateWindowsLabel();
 
         var buildGameObject = Instantiate(selectedImitatorGameObject);
         var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
@@ -275,69 +295,80 @@ public class CustomAvatarMapper : MonoBehaviour
             InteractionMode.AutomatedAction);
 
         //JSON
-        GenerateJSONFiles(path);
+        GenerateJsonFiles(path);
 
         GenerateIcon(item, iconPath);
 
         AssetDatabase.Refresh();
-        EditorUtility.FocusProjectWindow();
-        Selection.activeObject = builtObject;
 
-        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-
-        if (settings == null)
-            return;
-
-        AddressableAssetGroup currentAddressableGroup = settings.FindGroup(gameObjectName);
+        var currentAddressableGroup = settings.FindGroup(gameObjectName);
 
         if (currentAddressableGroup == null)
         {
-
             var defaultAddressableGroup = settings.FindGroup("Default");
-            
-            currentAddressableGroup = settings.CreateGroup(gameObjectName, false, false, true, defaultAddressableGroup.Schemas,
+
+            currentAddressableGroup = settings.CreateGroup(gameObjectName, false, false, true,
+                defaultAddressableGroup.Schemas,
                 typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
         }
 
         settings.DefaultGroup = currentAddressableGroup;
 
-        AddAssetToAddressableGroup(settings, avatarPath, gameObjectName);
-        AddAssetToAddressableGroup(settings, iconPath, gameObjectName + "Icon");
+        AddAssetToAddressableGroup(iconPath, gameObjectName + "Icon");
+        AddAssetToAddressableGroup(avatarPath, gameObjectName);
+
+        AssetDatabase.Refresh();
+        EditorUtility.FocusProjectWindow();
+        Selection.activeObject = builtObject;
 
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
+        //exit play mode
+        EditorApplication.ExecuteMenuItem("Edit/Play");
+
+        yield return null;
     }
 
-    private void AddAssetToAddressableGroup(AddressableAssetSettings settings, string path, string addressName)
+    public IEnumerator TryGenerateWindowsLabel()
     {
         if (!settings.GetLabels().Contains("Windows"))
         {
             settings.AddLabel("Windows");
         }
 
-        string guid = AssetDatabase.AssetPathToGUID(path);
-        AddressableAssetEntry entry = settings.FindAssetEntry(guid);
+        yield return null;
+    }
+
+    private void AddAssetToAddressableGroup(string path, string addressName)
+    {
+        var guid = AssetDatabase.AssetPathToGUID(path);
+        Debug.Log("1");
+        var entry = settings.FindAssetEntry(guid);
+        Debug.Log("2");
 
         if (entry == null)
         {
             entry = settings.CreateOrMoveEntry(guid, settings.DefaultGroup);
             settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, entry, true, false);
         }
+        
+        Debug.Log("3");
 
-        string prefabGuid = AssetDatabase.AssetPathToGUID(path);
-        AddressableAssetEntry prefabEntry = settings.FindAssetEntry(prefabGuid);
+        var prefabGuid = AssetDatabase.AssetPathToGUID(path);
+        var prefabEntry = settings.FindAssetEntry(prefabGuid);
+        
+        Debug.Log("4");
 
-        if (prefabEntry != null)
-        {
-            entry.SetLabel("Windows", true);
-            entry.SetAddress(addressName, false);
-        }
+        if (prefabEntry == null) return;
+        
+        Debug.Log("5");
+        entry.SetLabel("Windows", true);
+        entry.SetAddress(addressName, false);
     }
 
-    public void GenerateJSONFiles(string path)
+    private void GenerateJsonFiles(string path)
     {
         var directories = new Stack<string>();
         var templatesPath = Application.dataPath + "/CustomAvatarFramework/Editor/Templates/AutoRig";
-        var prefabName = gameObject.name;
         directories.Push(templatesPath);
 
         var files = new List<string>();
@@ -367,9 +398,12 @@ public class CustomAvatarMapper : MonoBehaviour
                 var newFile = file.Replace(templatesPath, exportsPath);
                 newFile = newFile.Replace("CAF", gameObjectName);
                 var templateContent = File.ReadAllText(file);
-                var exportContent = templateContent.Replace("CAF", gameObjectName).Replace("[BONESJSON]", bonesJSON);
-                ;
+                var exportContent = templateContent.Replace("CAF", gameObjectName).Replace("[BONESJSON]", bonesJson);
+
                 var exportDirectory = Path.GetDirectoryName(newFile);
+
+                if (exportDirectory == null)
+                    continue;
                 if (!Directory.Exists(exportDirectory))
                     Directory.CreateDirectory(exportDirectory);
                 File.WriteAllText(newFile, exportContent);
@@ -535,9 +569,9 @@ public class CustomAvatarMapper : MonoBehaviour
         return torsoLength + (thighLength + calfLength);
     }
 
-    public void MapBones(GameObject gameObject)
+    public void MapBones(GameObject inputGameObject)
     {
-        var customAvatar = gameObject.GetComponent<CustomAvatar>();
+        var customAvatar = inputGameObject.GetComponent<CustomAvatar>();
         var animator = customAvatar.animator;
 
         foreach (var boneMapper in CustomAvatar.boneMappers)
