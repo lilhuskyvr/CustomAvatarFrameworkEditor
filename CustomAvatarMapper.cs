@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
 using ThunderRoad;
@@ -43,9 +44,8 @@ public class CustomAvatarMapper : MonoBehaviour
     [HideInInspector] public Animator sampleImitatorAnimator;
     // Start is called before the first frame update
 
-    [HideInInspector] public string bonesJson;
-
     public Dictionary<string, Vector3> bones = new Dictionary<string, Vector3>();
+    public Vector3 extraDimension = Vector3.zero;
 
     public bool mapped;
 
@@ -197,7 +197,7 @@ public class CustomAvatarMapper : MonoBehaviour
         imitatorGameObject.transform.rotation = transform.rotation;
         imitatorGameObject.transform.localScale = Vector3.one;
 
-        ResizeCharacterModel();
+        CalculateExtraDimension();
 
 
         foreach (var boneMapper in CustomAvatar.boneMappers)
@@ -218,7 +218,6 @@ public class CustomAvatarMapper : MonoBehaviour
             bones[boneMapper.Key] = eulerAngle;
         }
 
-        bonesJson = JsonConvert.SerializeObject(bones, Formatting.Indented);
         mapped = true;
 
         if (sampleBaseGameObject == null)
@@ -350,16 +349,16 @@ public class CustomAvatarMapper : MonoBehaviour
             entry = settings.CreateOrMoveEntry(guid, settings.DefaultGroup);
             settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, entry, true, false);
         }
-        
+
         Debug.Log("3");
 
         var prefabGuid = AssetDatabase.AssetPathToGUID(path);
         var prefabEntry = settings.FindAssetEntry(prefabGuid);
-        
+
         Debug.Log("4");
 
         if (prefabEntry == null) return;
-        
+
         Debug.Log("5");
         entry.SetLabel("Windows", true);
         entry.SetAddress(addressName, false);
@@ -367,6 +366,8 @@ public class CustomAvatarMapper : MonoBehaviour
 
     private void GenerateJsonFiles(string path)
     {
+        var bonesJson = JsonConvert.SerializeObject(bones, Formatting.Indented);
+        var extraDimensionJson = JsonConvert.SerializeObject(extraDimension, Formatting.Indented);
         var directories = new Stack<string>();
         var templatesPath = Application.dataPath + "/CustomAvatarFramework/Editor/Templates/AutoRig";
         directories.Push(templatesPath);
@@ -398,7 +399,9 @@ public class CustomAvatarMapper : MonoBehaviour
                 var newFile = file.Replace(templatesPath, exportsPath);
                 newFile = newFile.Replace("CAF", gameObjectName);
                 var templateContent = File.ReadAllText(file);
-                var exportContent = templateContent.Replace("CAF", gameObjectName).Replace("[BONESJSON]", bonesJson);
+                var exportContent = templateContent.Replace("CAF", gameObjectName)
+                    .Replace("[BONESJSON]", bonesJson)
+                    .Replace("[EXTRADIMENSIONJSON]", extraDimensionJson);
 
                 var exportDirectory = Path.GetDirectoryName(newFile);
 
@@ -427,6 +430,8 @@ public class CustomAvatarMapper : MonoBehaviour
             imitatorBone.rotation = baseBone.rotation * Quaternion.Euler(bones[boneMapper.Key].x,
                 bones[boneMapper.Key].y, bones[boneMapper.Key].z);
         }
+
+        sampleImitatorGameObject.transform.localScale = extraDimension;
     }
 
     private float FormatRotationAngle(float angle)
@@ -441,15 +446,39 @@ public class CustomAvatarMapper : MonoBehaviour
         return rs;
     }
 
-    public void ResizeCharacterModel()
+    public ExamineResult ExamineInputGameObject(GameObject inputGameObject)
     {
-        var baseArmLength = CalculateArmLength(baseAnimator, "base");
+        var result = new ExamineResult();
 
-        var baseHeight = CalculateHeight(baseAnimator, "base");
+        var animator = inputGameObject.GetComponent<Animator>();
 
-        var imitatorArmLength = CalculateArmLength(imitatorAnimator, "imitator");
+        result.hasAnimator = animator != null;
 
-        var imitatorHeight = CalculateHeight(imitatorAnimator, "imitator");
+        if (!result.hasAnimator)
+            return result;
+
+        result.hasToeBone = animator.GetBoneTransform(HumanBodyBones.LeftToes) != null;
+
+        result.hasFingerBone = animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal) != null;
+
+        return result;
+    }
+
+    public void CalculateExtraDimension()
+    {
+        var examineResult = ExamineInputGameObject(imitatorGameObject);
+
+        var baseArmLength = CalculateArmLength(baseAnimator, examineResult);
+
+        var baseHeight = CalculateHeight(baseAnimator, examineResult);
+
+        Debug.Log("Base Height " + baseHeight);
+
+        var imitatorArmLength = CalculateArmLength(imitatorAnimator,  examineResult);
+
+        var imitatorHeight = CalculateHeight(imitatorAnimator, examineResult);
+
+        Debug.Log("Imitator Height " + imitatorHeight);
 
         //avatar width
         var zScale = baseArmLength / imitatorArmLength;
@@ -457,46 +486,20 @@ public class CustomAvatarMapper : MonoBehaviour
         //avatar height
         var yScale = baseHeight / imitatorHeight;
 
-        imitatorGameObject.transform.localScale = new Vector3(zScale, yScale, zScale);
-        selectedImitatorGameObject.transform.localScale = new Vector3(zScale, yScale, zScale);
+        extraDimension = new Vector3(zScale, yScale, zScale);
     }
 
-    private float CalculateArmLength(Animator animator, string type)
+    private float CalculateArmLength(Animator animator, ExamineResult examineResult)
     {
-        var defaultArmLength = 1;
-
-        if (animator == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator is null", "OK");
-            return defaultArmLength;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left middle distal bone", "OK");
-            return defaultArmLength;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.LeftLowerArm) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left lower arm bone", "OK");
-            return defaultArmLength;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.LeftUpperArm) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left upper arm bone", "OK");
-            return defaultArmLength;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.RightUpperArm) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have right upper arm bone", "OK");
-            return defaultArmLength;
-        }
+        var handLength = examineResult.hasFingerBone
+            ? Vector3.Distance(
+                animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal).position,
+                animator.GetBoneTransform(HumanBodyBones.LeftHand).position
+            )
+            : 0;
 
         var foreArmLength = Vector3.Distance(
-            animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal).position,
+            animator.GetBoneTransform(HumanBodyBones.LeftHand).position,
             animator.GetBoneTransform(HumanBodyBones.LeftLowerArm).position
         );
         var armLength = Vector3.Distance(
@@ -509,51 +512,22 @@ public class CustomAvatarMapper : MonoBehaviour
             animator.GetBoneTransform(HumanBodyBones.RightUpperArm).position
         );
 
-        return shoulderLength + (foreArmLength + armLength) * 2;
+        return shoulderLength + (handLength + foreArmLength + armLength) * 2;
     }
 
-    private float CalculateHeight(Animator animator, string type)
+    private float CalculateHeight(Animator animator, ExamineResult examineResult)
     {
         var defaultHeight = 1;
 
-        if (animator == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator is null", "OK");
-            return defaultHeight;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.LeftToes) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left toe bone", "OK");
-            return defaultHeight;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left lower leg bone", "OK");
-            return defaultHeight;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have left upper leg bone", "OK");
-            return defaultHeight;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.Head) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have head bone", "OK");
-            return defaultHeight;
-        }
-
-        if (animator.GetBoneTransform(HumanBodyBones.Hips) == null)
-        {
-            EditorUtility.DisplayDialog("Error", $"{type} animator doesn't have hips bone", "OK");
-            return defaultHeight;
-        }
+        var footLength = examineResult.hasToeBone
+            ? Vector3.Distance(
+                animator.GetBoneTransform(HumanBodyBones.LeftToes).position,
+                animator.GetBoneTransform(HumanBodyBones.LeftFoot).position
+            )
+            : 0;
 
         var calfLength = Vector3.Distance(
-            animator.GetBoneTransform(HumanBodyBones.LeftToes).position,
+            animator.GetBoneTransform(HumanBodyBones.LeftFoot).position,
             animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg).position
         );
         var thighLength = Vector3.Distance(
@@ -566,7 +540,7 @@ public class CustomAvatarMapper : MonoBehaviour
             animator.GetBoneTransform(HumanBodyBones.Hips).position
         );
 
-        return torsoLength + (thighLength + calfLength);
+        return torsoLength + thighLength + calfLength + footLength;
     }
 
     public void MapBones(GameObject inputGameObject)
@@ -613,6 +587,11 @@ public class CustomAvatarMapper : MonoBehaviour
     public void OpenPatreon()
     {
         Application.OpenURL("https://www.patreon.com/lilhuskyvr");
+    }
+
+    public void OpenDonate()
+    {
+        Application.OpenURL("https://www.nexusmods.com/Core/Libs/Common/Widgets/PayPalPopUp?user=73414238");
     }
 }
 
