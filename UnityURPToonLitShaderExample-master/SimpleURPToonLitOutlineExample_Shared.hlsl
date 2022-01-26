@@ -33,6 +33,8 @@
 //#include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
 
 // we will include some utility .hlsl files to help us
+#include <HLSLSupport.cginc>
+
 #include "NiloOutlineUtil.hlsl"
 #include "NiloZOffset.hlsl"
 #include "NiloInvLerpRemap.hlsl"
@@ -50,6 +52,7 @@ struct Attributes
     half3 normalOS      : NORMAL;
     half4 tangentOS     : TANGENT;
     float2 uv           : TEXCOORD0;
+    UNITY_VERTEX_INPUT_INSTANCE_ID 
 };
 
 // all pass will share this Varyings struct (define data needed from our vertex shader to our fragment shader)
@@ -59,6 +62,7 @@ struct Varyings
     float4 positionWSAndFogFactor   : TEXCOORD1; // xyz: positionWS, w: vertex fog factor
     half3 normalWS                  : TEXCOORD2;
     float4 positionCS               : SV_POSITION;
+    UNITY_VERTEX_OUTPUT_STEREO 
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -153,6 +157,11 @@ float3 TransformPositionWSToOutlinePositionWS(float3 positionWS, float positionV
 Varyings VertexShaderWork(Attributes input)
 {
     Varyings output;
+
+    UNITY_SETUP_INSTANCE_ID(input); //Insert
+    UNITY_INITIALIZE_OUTPUT(Varyings, output); //Insert
+    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output); //Insert
+
 
     // VertexPositionInputs contains position in multiple spaces (world, view, homogeneous clip space, ndc)
     // Unity compiler will strip all unused references (say you don't use view space).
