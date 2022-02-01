@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
@@ -43,6 +44,10 @@ public class CustomAvatarMapper : MonoBehaviour
 
     [HideInInspector] public Animator sampleImitatorAnimator;
     // Start is called before the first frame update
+
+    public string bloodDecalMaterialPath = "Assets/CustomAvatarFramework/Resources/BloodDecalMaterial.mat";
+
+    [HideInInspector] public Material bloodDecalMaterial;
 
     public Dictionary<string, Vector3> bones = new Dictionary<string, Vector3>();
     public Vector3 extraDimension = Vector3.zero;
@@ -91,6 +96,13 @@ public class CustomAvatarMapper : MonoBehaviour
         }
 
         baseAnimator.runtimeAnimatorController = Instantiate(tPoseController);
+
+        //load blood decal material
+        if (bloodDecalMaterial == null)
+        {
+            bloodDecalMaterial = Instantiate(
+                AssetDatabase.LoadAssetAtPath<Material>(bloodDecalMaterialPath));
+        }
     }
 
     public void OpenFile()
@@ -273,7 +285,6 @@ public class CustomAvatarMapper : MonoBehaviour
         item.preview.transform.localRotation = Quaternion.Euler(0, 180, 0);
         var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
         customAvatar.animator = buildGameObjectAnimator;
-        var customAvatarHeadBone = customAvatar.animator.GetBoneTransform(HumanBodyBones.Head);
 
         //run map bones
         MapBones(itemGameObject);
@@ -282,16 +293,16 @@ public class CustomAvatarMapper : MonoBehaviour
         buildGameObject.transform.localPosition = Vector3.zero;
         buildGameObject.transform.localRotation = Quaternion.identity;
 
-
         foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             skinnedMeshRenderer.updateWhenOffscreen = true;
+            skinnedMeshRenderer.AddRevealDecal();
         }
 
         var avatarPath = path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab";
         var iconPath = path.ToUnityRelativePath() + "/" + gameObjectName + "Icon.png";
 
-        var builtObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
+        var builtGameObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
             InteractionMode.AutomatedAction);
 
         //JSON
@@ -316,10 +327,11 @@ public class CustomAvatarMapper : MonoBehaviour
 
         AddAssetToAddressableGroup(iconPath, gameObjectName + "Icon");
         AddAssetToAddressableGroup(avatarPath, gameObjectName);
+        AddAssetToAddressableGroup(bloodDecalMaterialPath, "BloodDecalMaterial");
 
         AssetDatabase.Refresh();
         EditorUtility.FocusProjectWindow();
-        Selection.activeObject = builtObject;
+        Selection.activeObject = builtGameObject;
 
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
         //exit play mode
@@ -354,7 +366,7 @@ public class CustomAvatarMapper : MonoBehaviour
         var prefabEntry = settings.FindAssetEntry(prefabGuid);
 
         if (prefabEntry == null) return;
-        
+
         entry.SetLabel("Windows", true);
         entry.SetAddress(addressName, false);
     }
