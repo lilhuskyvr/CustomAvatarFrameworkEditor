@@ -62,7 +62,7 @@ public class CustomAvatarMapper : MonoBehaviour
         EditorUtility.DisplayDialog("Error", "Unable to load settings", "OK");
     }
 
-    private void LoadData()
+    private void Init()
     {
         if (baseGameObject == null)
         {
@@ -143,8 +143,8 @@ public class CustomAvatarMapper : MonoBehaviour
 
         imitatorAnimator.runtimeAnimatorController = Instantiate(tPoseController);
 
-        //Load data here
-        LoadData();
+        //init here
+        Init();
     }
 
     public bool ValidateGameObject(GameObject go, string type)
@@ -273,6 +273,7 @@ public class CustomAvatarMapper : MonoBehaviour
         item.preview.transform.localRotation = Quaternion.Euler(0, 180, 0);
         var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
         customAvatar.animator = buildGameObjectAnimator;
+        var customAvatarHeadBone = customAvatar.animator.GetBoneTransform(HumanBodyBones.Head);
 
         //run map bones
         MapBones(itemGameObject);
@@ -340,9 +341,8 @@ public class CustomAvatarMapper : MonoBehaviour
     private void AddAssetToAddressableGroup(string path, string addressName)
     {
         var guid = AssetDatabase.AssetPathToGUID(path);
-        Debug.Log("1");
+
         var entry = settings.FindAssetEntry(guid);
-        Debug.Log("2");
 
         if (entry == null)
         {
@@ -350,16 +350,11 @@ public class CustomAvatarMapper : MonoBehaviour
             settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, entry, true, false);
         }
 
-        Debug.Log("3");
-
         var prefabGuid = AssetDatabase.AssetPathToGUID(path);
         var prefabEntry = settings.FindAssetEntry(prefabGuid);
 
-        Debug.Log("4");
-
         if (prefabEntry == null) return;
-
-        Debug.Log("5");
+        
         entry.SetLabel("Windows", true);
         entry.SetAddress(addressName, false);
     }
@@ -474,7 +469,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
         Debug.Log("Base Height " + baseHeight);
 
-        var imitatorArmLength = CalculateArmLength(imitatorAnimator,  examineResult);
+        var imitatorArmLength = CalculateArmLength(imitatorAnimator, examineResult);
 
         var imitatorHeight = CalculateHeight(imitatorAnimator, examineResult);
 
