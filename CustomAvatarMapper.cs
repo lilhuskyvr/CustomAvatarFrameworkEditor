@@ -293,6 +293,8 @@ public class CustomAvatarMapper : MonoBehaviour
         buildGameObject.transform.localPosition = Vector3.zero;
         buildGameObject.transform.localRotation = Quaternion.identity;
 
+        buildGameObject.AddCustomAvatarHeads();
+
         foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             skinnedMeshRenderer.updateWhenOffscreen = true;
@@ -316,7 +318,7 @@ public class CustomAvatarMapper : MonoBehaviour
         var avatarPath = path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab";
         var iconPath = path.ToUnityRelativePath() + "/" + gameObjectName + "Icon.png";
 
-        var builtGameObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
+        var builtItem = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
             InteractionMode.AutomatedAction);
 
         //JSON
@@ -345,7 +347,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
         AssetDatabase.Refresh();
         EditorUtility.FocusProjectWindow();
-        Selection.activeObject = builtGameObject;
+        Selection.activeObject = builtItem;
 
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
         //exit play mode
