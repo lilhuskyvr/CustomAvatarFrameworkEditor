@@ -297,6 +297,20 @@ public class CustomAvatarMapper : MonoBehaviour
         {
             skinnedMeshRenderer.updateWhenOffscreen = true;
             skinnedMeshRenderer.AddRevealDecal();
+
+            foreach (var sharedMaterial in skinnedMeshRenderer.sharedMaterials)
+            {
+                //moe material 
+                var moeTexture = sharedMaterial.CreateMoeTexture();
+
+                if (moeTexture == null)
+                    continue;
+                MOESConvertWindow.Initialize();
+                MOESConvertWindow.CreateTexture(moeTexture);
+                MOESConvertWindow.ModifyMaterial(moeTexture);
+
+                moeTexture.material.SetBloodTextures(bloodDecalMaterial);
+            }
         }
 
         var avatarPath = path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab";

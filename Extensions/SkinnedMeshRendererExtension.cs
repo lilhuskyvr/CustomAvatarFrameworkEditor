@@ -1,4 +1,5 @@
-﻿using CustomAvatarFramework.Editor.Items;
+﻿#if UNITY_EDITOR
+using CustomAvatarFramework.Editor.Items;
 using ThunderRoad;
 using UnityEngine;
 
@@ -26,3 +27,5 @@ public static class SkinnedMeshRendererExtension
         revealDecal.SetMaskResolutionFull();
     }
 }
+
+#endif
