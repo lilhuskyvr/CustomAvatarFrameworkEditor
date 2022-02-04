@@ -99,7 +99,8 @@ LightmapSettings:
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: 3991344701deb8e4f9b07fa141442bf8,
     type: 2}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 9e621a0365e33fd4aab7819c8ee8e7cd,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -724,6 +725,8 @@ MonoBehaviour:
   imitatorAnimator: {fileID: 0}
   sampleBaseAnimator: {fileID: 0}
   sampleImitatorAnimator: {fileID: 0}
+  bloodDecalMaterialPath: Assets/CustomAvatarFramework/Resources/BloodDecalMaterial.mat
+  bloodDecalMaterial: {fileID: 0}
   extraDimension: {x: 0, y: 0, z: 0}
   mapped: 0
 --- !u!4 &709745954

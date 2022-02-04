@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
@@ -44,6 +45,10 @@ public class CustomAvatarMapper : MonoBehaviour
     [HideInInspector] public Animator sampleImitatorAnimator;
     // Start is called before the first frame update
 
+    public string bloodDecalMaterialPath = "Assets/CustomAvatarFramework/Resources/BloodDecalMaterial.mat";
+
+    [HideInInspector] public Material bloodDecalMaterial;
+
     public Dictionary<string, Vector3> bones = new Dictionary<string, Vector3>();
     public Vector3 extraDimension = Vector3.zero;
 
@@ -62,7 +67,7 @@ public class CustomAvatarMapper : MonoBehaviour
         EditorUtility.DisplayDialog("Error", "Unable to load settings", "OK");
     }
 
-    private void LoadData()
+    private void Init()
     {
         if (baseGameObject == null)
         {
@@ -91,6 +96,13 @@ public class CustomAvatarMapper : MonoBehaviour
         }
 
         baseAnimator.runtimeAnimatorController = Instantiate(tPoseController);
+
+        //load blood decal material
+        if (bloodDecalMaterial == null)
+        {
+            bloodDecalMaterial = Instantiate(
+                AssetDatabase.LoadAssetAtPath<Material>(bloodDecalMaterialPath));
+        }
     }
 
     public void OpenFile()
@@ -143,8 +155,8 @@ public class CustomAvatarMapper : MonoBehaviour
 
         imitatorAnimator.runtimeAnimatorController = Instantiate(tPoseController);
 
-        //Load data here
-        LoadData();
+        //init here
+        Init();
     }
 
     public bool ValidateGameObject(GameObject go, string type)
@@ -281,16 +293,30 @@ public class CustomAvatarMapper : MonoBehaviour
         buildGameObject.transform.localPosition = Vector3.zero;
         buildGameObject.transform.localRotation = Quaternion.identity;
 
-
         foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             skinnedMeshRenderer.updateWhenOffscreen = true;
+            skinnedMeshRenderer.AddRevealDecal();
+
+            foreach (var sharedMaterial in skinnedMeshRenderer.sharedMaterials)
+            {
+                //moe material 
+                var moeTexture = sharedMaterial.CreateMoeTexture();
+
+                if (moeTexture == null)
+                    continue;
+                MOESConvertWindow.Initialize();
+                MOESConvertWindow.CreateTexture(moeTexture);
+                MOESConvertWindow.ModifyMaterial(moeTexture);
+
+                moeTexture.material.SetBloodTextures(bloodDecalMaterial);
+            }
         }
 
         var avatarPath = path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab";
         var iconPath = path.ToUnityRelativePath() + "/" + gameObjectName + "Icon.png";
 
-        var builtObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
+        var builtGameObject = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
             InteractionMode.AutomatedAction);
 
         //JSON
@@ -315,10 +341,11 @@ public class CustomAvatarMapper : MonoBehaviour
 
         AddAssetToAddressableGroup(iconPath, gameObjectName + "Icon");
         AddAssetToAddressableGroup(avatarPath, gameObjectName);
+        AddAssetToAddressableGroup(bloodDecalMaterialPath, "BloodDecalMaterial");
 
         AssetDatabase.Refresh();
         EditorUtility.FocusProjectWindow();
-        Selection.activeObject = builtObject;
+        Selection.activeObject = builtGameObject;
 
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
         //exit play mode
@@ -340,9 +367,8 @@ public class CustomAvatarMapper : MonoBehaviour
     private void AddAssetToAddressableGroup(string path, string addressName)
     {
         var guid = AssetDatabase.AssetPathToGUID(path);
-        Debug.Log("1");
+
         var entry = settings.FindAssetEntry(guid);
-        Debug.Log("2");
 
         if (entry == null)
         {
@@ -350,16 +376,11 @@ public class CustomAvatarMapper : MonoBehaviour
             settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, entry, true, false);
         }
 
-        Debug.Log("3");
-
         var prefabGuid = AssetDatabase.AssetPathToGUID(path);
         var prefabEntry = settings.FindAssetEntry(prefabGuid);
 
-        Debug.Log("4");
-
         if (prefabEntry == null) return;
 
-        Debug.Log("5");
         entry.SetLabel("Windows", true);
         entry.SetAddress(addressName, false);
     }
@@ -474,7 +495,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
         Debug.Log("Base Height " + baseHeight);
 
-        var imitatorArmLength = CalculateArmLength(imitatorAnimator,  examineResult);
+        var imitatorArmLength = CalculateArmLength(imitatorAnimator, examineResult);
 
         var imitatorHeight = CalculateHeight(imitatorAnimator, examineResult);
 
