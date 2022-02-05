@@ -271,6 +271,9 @@ public class CustomAvatarMapper : MonoBehaviour
         var buildGameObject = Instantiate(selectedImitatorGameObject);
         var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
 
+        buildGameObject.AddCustomAvatarHeads();
+        buildGameObject.AddCustomAvatarDynamicBones();
+
         buildGameObjectAnimator.runtimeAnimatorController = null;
 
         var itemGameObject = new GameObject();
@@ -291,9 +294,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
         buildGameObject.transform.SetParent(itemGameObject.transform);
         buildGameObject.transform.localPosition = Vector3.zero;
-        buildGameObject.transform.localRotation = Quaternion.identity;
-
-        buildGameObject.AddCustomAvatarHeads();
+        buildGameObject.transform.localRotation = Quaternion.identity; 
 
         foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
         {
