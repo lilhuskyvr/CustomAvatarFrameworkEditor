@@ -156,6 +156,8 @@ public static class GameObjectExtension
 
         foreach (var subBone in subBones)
         {
+            if (subBone.gameObject.GetComponent<CustomAvatarIgnore>() != null)
+                continue;
             subBone.gameObject.AddOrGetComponent<CustomAvatarDynamicBone>();
         }
     }
@@ -205,6 +207,42 @@ public static class GameObjectExtension
         {
             mainBone.gameObject.AddOrGetComponent<CustomAvatarDynamicBoneCollider>();
         }
+    }
+
+    public static bool CanBeMadeIntoCustomAvatar(this GameObject gameObject, out List<string> errors)
+    {
+        var animator = gameObject.GetComponent<Animator>();
+
+        if (animator == null)
+        {
+            errors = new List<string> { "No Animator component found" };
+            return false;
+        }
+
+        if (!animator.isHuman)
+        {
+            errors = new List<string> { "Animator is not human" };
+            return false;
+        }
+
+        foreach (var skinnedMeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            if (skinnedMeshRenderer.sharedMesh == null)
+            {
+                errors = new List<string> { "SkinnedMeshRenderer has no mesh" };
+                return false;
+            }
+
+            if (skinnedMeshRenderer.sharedMesh.isReadable == false)
+            {
+                errors = new List<string> { "SkinnedMeshRenderer mesh is not readable" };
+                return false;
+            }
+        }
+
+        errors = new List<string>();
+
+        return true;
     }
 }
 

@@ -7,6 +7,9 @@ public static class SkinnedMeshRendererExtension
 {
     public static void AddCustomAvatarHead(this SkinnedMeshRenderer skinnedMeshRenderer)
     {
+        if (skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>() != null)
+            return;
+        
         var customAvatarHead = skinnedMeshRenderer.GetComponent<CustomAvatarHead>();
 
         if (customAvatarHead != null)
