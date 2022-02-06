@@ -145,7 +145,7 @@ public static class GameObjectExtension
             {
                 if (mainBones.Contains(subBoneTransform) || !subBoneTransform.HasChildren())
                     continue;
-                
+
                 //if sub bone is a parent of 1 main bone, continue
                 if (subBoneTransform.GetChildTransforms().Any(c => mainBones.Contains(c)))
                     continue;
@@ -153,10 +153,57 @@ public static class GameObjectExtension
                 subBones.Add(subBoneTransform);
             }
         }
-        
+
         foreach (var subBone in subBones)
         {
             subBone.gameObject.AddOrGetComponent<CustomAvatarDynamicBone>();
+        }
+    }
+
+    public static void AddCustomAvatarDynamicBoneColliders(this GameObject gameObject)
+    {
+        //create bones hashset here
+
+        var animator = gameObject.GetComponent<Animator>();
+
+        if (animator == null)
+            return;
+
+        var mainBones = new HashSet<Transform>();
+        var subBones = new HashSet<Transform>();
+
+        var humanBodyBones = new List<HumanBodyBones>()
+        {
+            HumanBodyBones.Hips,
+            HumanBodyBones.Spine,
+            HumanBodyBones.Chest,
+            HumanBodyBones.UpperChest,
+            HumanBodyBones.Head,
+            HumanBodyBones.LeftShoulder,
+            HumanBodyBones.RightShoulder,
+            HumanBodyBones.LeftUpperArm,
+            HumanBodyBones.LeftLowerArm,
+            HumanBodyBones.RightUpperArm,
+            HumanBodyBones.RightLowerArm,
+            HumanBodyBones.LeftUpperLeg,
+            HumanBodyBones.LeftLowerLeg,
+            HumanBodyBones.RightUpperLeg,
+            HumanBodyBones.RightLowerLeg,
+        };
+
+        foreach (var humanBodyBone in humanBodyBones)
+        {
+            var bone = animator.GetBoneTransform(humanBodyBone);
+
+            if (bone == null)
+                continue;
+
+            mainBones.Add(bone);
+        }
+
+        foreach (var mainBone in mainBones)
+        {
+            mainBone.gameObject.AddOrGetComponent<CustomAvatarDynamicBoneCollider>();
         }
     }
 }

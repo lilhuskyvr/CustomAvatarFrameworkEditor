@@ -273,6 +273,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
         buildGameObject.AddCustomAvatarHeads();
         buildGameObject.AddCustomAvatarDynamicBones();
+        buildGameObject.AddCustomAvatarDynamicBoneColliders();
 
         buildGameObjectAnimator.runtimeAnimatorController = null;
 
