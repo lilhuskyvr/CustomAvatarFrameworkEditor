@@ -206,8 +206,11 @@ public class CustomAvatarMassMapper : MonoBehaviour
             imitatorAnimator = imitatorGameObject.GetComponent<Animator>();
             imitatorAnimator.runtimeAnimatorController = Instantiate(tPoseController);
 
+            //wait for the tpose to be loaded
+            yield return new WaitForSeconds(10);
+
             var creatureId = sourcePrefab.name.Replace(" ", "");
-            
+
             Calibrate();
             
             var buildGameObject = Instantiate(sourcePrefab);

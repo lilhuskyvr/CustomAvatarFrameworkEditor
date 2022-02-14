@@ -345,7 +345,10 @@ public class CustomAvatarMapper : MonoBehaviour
 
         AddAssetToAddressableGroup(iconPath, gameObjectName + "Icon");
         AddAssetToAddressableGroup(avatarPath, gameObjectName);
-        AddAssetToAddressableGroup(bloodDecalMaterialPath, "BloodDecalMaterial");
+        
+        var newBloodMaterialPath = path.ToUnityRelativePath() + "/" + "BloodDecal.mat";
+        AssetDatabase.CreateAsset(bloodDecalMaterial, newBloodMaterialPath);
+        AddAssetToAddressableGroup(newBloodMaterialPath, "BloodDecalMaterial");
 
         AssetDatabase.Refresh();
         EditorUtility.FocusProjectWindow();
