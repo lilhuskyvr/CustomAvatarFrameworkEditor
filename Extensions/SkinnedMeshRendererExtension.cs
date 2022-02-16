@@ -7,9 +7,14 @@ public static class SkinnedMeshRendererExtension
 {
     public static void AddCustomAvatarHead(this SkinnedMeshRenderer skinnedMeshRenderer)
     {
-        if (skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>() != null)
-            return;
-        
+        var customAvatarIgnore = skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>();
+
+        if (customAvatarIgnore != null)
+        {
+            if (customAvatarIgnore.ignoreCustomAvatarHead)
+                return;
+        }
+
         var customAvatarHead = skinnedMeshRenderer.GetComponent<CustomAvatarHead>();
 
         if (customAvatarHead != null)
@@ -26,7 +31,7 @@ public static class SkinnedMeshRendererExtension
         {
             revealDecal = skinnedMeshRenderer.gameObject.AddComponent<RevealDecal>();
         }
-        
+
         revealDecal.SetMaskResolutionFull();
     }
 }

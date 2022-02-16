@@ -295,11 +295,20 @@ public class CustomAvatarMapper : MonoBehaviour
 
         buildGameObject.transform.SetParent(itemGameObject.transform);
         buildGameObject.transform.localPosition = Vector3.zero;
-        buildGameObject.transform.localRotation = Quaternion.identity; 
+        buildGameObject.transform.localRotation = Quaternion.identity;
 
         foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             skinnedMeshRenderer.updateWhenOffscreen = true;
+
+            var customAvatarIgnore = skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>();
+
+            if (customAvatarIgnore != null)
+            {
+                if (customAvatarIgnore.ignoreMOES)
+                    continue;
+            }
+
             skinnedMeshRenderer.AddRevealDecal();
 
             foreach (var sharedMaterial in skinnedMeshRenderer.sharedMaterials)
@@ -345,7 +354,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
         AddAssetToAddressableGroup(iconPath, gameObjectName + "Icon");
         AddAssetToAddressableGroup(avatarPath, gameObjectName);
-        
+
         var newBloodMaterialPath = path.ToUnityRelativePath() + "/" + "BloodDecal.mat";
         AssetDatabase.CreateAsset(bloodDecalMaterial, newBloodMaterialPath);
         AddAssetToAddressableGroup(newBloodMaterialPath, "BloodDecalMaterial");

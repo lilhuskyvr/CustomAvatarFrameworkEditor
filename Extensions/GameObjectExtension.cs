@@ -156,8 +156,13 @@ public static class GameObjectExtension
 
         foreach (var subBone in subBones)
         {
-            if (subBone.gameObject.GetComponent<CustomAvatarIgnore>() != null)
-                continue;
+            var customAvatarIgnore = subBone.gameObject.GetComponent<CustomAvatarIgnore>();
+            if (customAvatarIgnore != null)
+            {
+                if (customAvatarIgnore.ignoreCustomAvatarDynamicBone)
+                    continue;
+            }
+
             subBone.gameObject.AddOrGetComponent<CustomAvatarDynamicBone>();
         }
     }

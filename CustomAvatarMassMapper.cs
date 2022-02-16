@@ -246,6 +246,15 @@ public class CustomAvatarMassMapper : MonoBehaviour
             foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 skinnedMeshRenderer.updateWhenOffscreen = true;
+                
+                var customAvatarIgnore = skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>();
+
+                if (customAvatarIgnore != null)
+                {
+                    if (customAvatarIgnore.ignoreMOES)
+                        continue;
+                }
+                
                 skinnedMeshRenderer.AddRevealDecal();
 
                 foreach (var sharedMaterial in skinnedMeshRenderer.sharedMaterials)
