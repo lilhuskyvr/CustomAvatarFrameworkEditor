@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
@@ -21,44 +20,37 @@ using UnityEngine.SceneManagement;
 // ReSharper disable CheckNamespace
 // ReSharper disable FieldCanBeMadeReadOnly.Global
 
-public class CustomAvatarMapper : MonoBehaviour
+public class CustomAvatarMassMapper : MonoBehaviour
 {
     [HideInInspector] public GameObject baseGameObject;
-    [HideInInspector] public GameObject selectedImitatorGameObject;
     [HideInInspector] public GameObject imitatorGameObject;
-
-    public string gameObjectName { get; set; }
 
     public AddressableAssetSettings settings;
 
     [HideInInspector] public AnimatorController tPoseController;
-    [HideInInspector] public AnimatorController skinningTestController;
-
-    [HideInInspector] public GameObject sampleBaseGameObject;
-    [HideInInspector] public GameObject sampleImitatorGameObject;
 
     [HideInInspector] public Animator baseAnimator;
     [HideInInspector] public Animator imitatorAnimator;
 
-    [HideInInspector] public Animator sampleBaseAnimator;
-
-    [HideInInspector] public Animator sampleImitatorAnimator;
     // Start is called before the first frame update
 
+    [HideInInspector]
     public string bloodDecalMaterialPath = "Assets/CustomAvatarFramework/Resources/BloodDecalMaterial.mat";
 
     [HideInInspector] public Material bloodDecalMaterial;
 
     public Dictionary<string, Vector3> bones = new Dictionary<string, Vector3>();
-    public Vector3 extraDimension = Vector3.zero;
+    [HideInInspector] public Vector3 extraDimension = Vector3.zero;
 
-    public bool mapped;
+    private string inputDirectoryPath;
+    private string outputDirectoryPath;
+    public string addressableGroupName { get; set; }
+
 
     private void Start()
     {
         transform.position = Vector3.zero;
         transform.rotation = Quaternion.identity;
-
 
         settings = AddressableAssetSettingsDefaultObject.Settings;
 
@@ -87,14 +79,6 @@ public class CustomAvatarMapper : MonoBehaviour
                         "Assets/CustomAvatarFramework/Resources/TPose.controller"));
         }
 
-        if (skinningTestController == null)
-        {
-            skinningTestController =
-                Instantiate(
-                    AssetDatabase.LoadAssetAtPath<AnimatorController>(
-                        "Assets/CustomAvatarFramework/Resources/SkinningTest.controller"));
-        }
-
         baseAnimator.runtimeAnimatorController = Instantiate(tPoseController);
 
         //load blood decal material
@@ -105,58 +89,26 @@ public class CustomAvatarMapper : MonoBehaviour
         }
     }
 
-    public void OpenFile()
+    public void SelectInputFolder()
     {
-        var path = EditorUtility.OpenFilePanel("Select model", Application.dataPath, "prefab,fbx,dae,dxf,obj");
+        inputDirectoryPath =
+            EditorUtility.OpenFolderPanel("Choose Folder", Application.dataPath, "");
 
-        if (path == null)
+        if (inputDirectoryPath == null)
             return;
 
-        selectedImitatorGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(path.ToUnityRelativePath());
+        inputDirectoryPath = inputDirectoryPath.ToUnityRelativePath();
+    }
 
-        if (selectedImitatorGameObject == null)
-        {
-            EditorUtility.DisplayDialog("Error", "Unable to load file", "OK");
+    public void SelectOutputFolder()
+    {
+        outputDirectoryPath =
+            EditorUtility.OpenFolderPanel("Choose Folder", Application.dataPath, "");
+
+        if (outputDirectoryPath == null)
             return;
-        }
 
-        imitatorGameObject = Instantiate(selectedImitatorGameObject, transform.position, transform.rotation);
-
-        imitatorAnimator = imitatorGameObject.GetComponent<Animator>();
-
-        if (imitatorAnimator == null)
-        {
-            EditorUtility.DisplayDialog("Error", "This mesh doesnt have animator", "OK");
-            imitatorGameObject = null;
-            return;
-        }
-
-        if (!imitatorAnimator.isHuman)
-        {
-            EditorUtility.DisplayDialog("Error", "This mesh isn't humanoid", "OK");
-            imitatorGameObject = null;
-            return;
-        }
-
-        foreach (var skinnedMeshRenderer in imitatorGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-        {
-            if (!skinnedMeshRenderer.sharedMesh.isReadable)
-            {
-                EditorUtility.DisplayDialog("Error", "Mesh isn't read/write enable", "OK");
-                imitatorGameObject = null;
-                return;
-            }
-        }
-
-        foreach (var skinnedMeshRenderer in imitatorGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-        {
-            skinnedMeshRenderer.updateWhenOffscreen = true;
-        }
-
-        imitatorAnimator.runtimeAnimatorController = Instantiate(tPoseController);
-
-        //init here
-        Init();
+        outputDirectoryPath = outputDirectoryPath.ToUnityRelativePath();
     }
 
     public bool ValidateGameObject(GameObject go, string type)
@@ -211,7 +163,8 @@ public class CustomAvatarMapper : MonoBehaviour
 
         CalculateExtraDimension();
 
-
+        bones = new Dictionary<string, Vector3>();
+        
         foreach (var boneMapper in CustomAvatar.boneMappers)
         {
             var baseBone = baseAnimator.GetBoneTransform(boneMapper.Value);
@@ -229,145 +182,168 @@ public class CustomAvatarMapper : MonoBehaviour
 
             bones[boneMapper.Key] = eulerAngle;
         }
-
-        mapped = true;
-
-        if (sampleBaseGameObject == null)
-        {
-            sampleBaseGameObject = Instantiate(baseGameObject, transform.position + transform.forward + transform.right,
-                transform.rotation);
-            sampleBaseAnimator = sampleBaseGameObject.GetComponent<Animator>();
-            sampleBaseAnimator.applyRootMotion = false;
-
-            sampleBaseAnimator.runtimeAnimatorController = Instantiate(skinningTestController);
-        }
-
-        if (sampleImitatorGameObject == null)
-        {
-            sampleImitatorGameObject =
-                Instantiate(selectedImitatorGameObject, transform.position + transform.forward - transform.right,
-                    transform.rotation);
-
-            sampleImitatorAnimator = sampleImitatorGameObject.GetComponent<Animator>();
-            sampleImitatorAnimator.runtimeAnimatorController = null;
-            sampleBaseAnimator.applyRootMotion = false;
-        }
     }
 
     public void Build()
     {
-        var path = EditorUtility.OpenFolderPanel("Choose Folder", Application.dataPath, "");
-
-        if (path == null)
-            return;
-
-        StartCoroutine(BuildCoroutine(path));
+        StartCoroutine(BuildCoroutine());
     }
 
-    public IEnumerator BuildCoroutine(string path)
+    public IEnumerator BuildCoroutine()
     {
+        Init();
+
+        addressableGroupName = addressableGroupName != null ? addressableGroupName.Replace(" ", "") : "PackedCAFAsset";
+
+        var sourcePrefabs = LoadSourcePrefabsFromDirectory(inputDirectoryPath);
+
         yield return TryGenerateWindowsLabel();
-
-        var buildGameObject = Instantiate(selectedImitatorGameObject);
-        var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
-
-        buildGameObject.AddCustomAvatarHeads();
-        buildGameObject.AddCustomAvatarDynamicBones();
-        buildGameObject.AddCustomAvatarDynamicBoneColliders();
-
-        buildGameObjectAnimator.runtimeAnimatorController = null;
-
-        var itemGameObject = new GameObject();
-        var item = itemGameObject.AddComponent<Item>();
-        foreach (var itemCollisionHandler in item.collisionHandlers)
+        
+        foreach (var sourcePrefab in sourcePrefabs)
         {
-            DestroyImmediate(itemCollisionHandler);
-        }
+            //calibrate here first
+            imitatorGameObject = Instantiate(sourcePrefab);
+            imitatorAnimator = imitatorGameObject.GetComponent<Animator>();
+            imitatorAnimator.runtimeAnimatorController = Instantiate(tPoseController);
 
-        item.rb.isKinematic = true;
-        item.preview.transform.position = buildGameObjectAnimator.GetBoneTransform(HumanBodyBones.Head).position;
-        item.preview.transform.localRotation = Quaternion.Euler(0, 180, 0);
-        var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
-        customAvatar.animator = buildGameObjectAnimator;
+            //wait for the tpose to be loaded
+            yield return new WaitForSeconds(10);
 
-        //run map bones
-        MapBones(itemGameObject);
+            var creatureId = sourcePrefab.name.Replace(" ", "");
 
-        buildGameObject.transform.SetParent(itemGameObject.transform);
-        buildGameObject.transform.localPosition = Vector3.zero;
-        buildGameObject.transform.localRotation = Quaternion.identity;
+            Calibrate();
+            
+            var buildGameObject = Instantiate(sourcePrefab);
+            var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
 
-        foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-        {
-            skinnedMeshRenderer.updateWhenOffscreen = true;
+            buildGameObject.AddCustomAvatarHeads();
+            buildGameObject.AddCustomAvatarDynamicBones();
+            buildGameObject.AddCustomAvatarDynamicBoneColliders();
 
-            var customAvatarIgnore = skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>();
+            buildGameObjectAnimator.runtimeAnimatorController = null;
 
-            if (customAvatarIgnore != null)
+            var itemGameObject = new GameObject();
+            var item = itemGameObject.AddComponent<Item>();
+            foreach (var itemCollisionHandler in item.collisionHandlers)
             {
-                if (customAvatarIgnore.ignoreMOES)
-                    continue;
+                DestroyImmediate(itemCollisionHandler);
             }
 
-            skinnedMeshRenderer.AddRevealDecal();
+            item.rb.isKinematic = true;
+            var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
+            customAvatar.animator = buildGameObjectAnimator;
 
-            foreach (var sharedMaterial in skinnedMeshRenderer.sharedMaterials)
+            //run map bones
+            MapBones(itemGameObject);
+
+            buildGameObject.transform.SetParent(itemGameObject.transform);
+            buildGameObject.transform.localPosition = Vector3.zero;
+            buildGameObject.transform.localRotation = Quaternion.identity;
+            
+            item.preview.transform.position = buildGameObjectAnimator.GetBoneTransform(HumanBodyBones.Head).position;
+            item.preview.transform.localRotation = Quaternion.Euler(0, 180, 0);
+
+            foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                //moe material 
-                var moeTexture = sharedMaterial.CreateMoeTexture();
+                skinnedMeshRenderer.updateWhenOffscreen = true;
+                
+                var customAvatarIgnore = skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>();
 
-                if (moeTexture == null)
-                    continue;
-                MOESConvertWindow.Initialize();
-                MOESConvertWindow.CreateTexture(moeTexture);
-                MOESConvertWindow.ModifyMaterial(moeTexture);
+                if (customAvatarIgnore != null)
+                {
+                    if (customAvatarIgnore.ignoreMOES)
+                        continue;
+                }
+                
+                skinnedMeshRenderer.AddRevealDecal();
 
-                moeTexture.material.SetBloodTextures(bloodDecalMaterial);
+                foreach (var sharedMaterial in skinnedMeshRenderer.sharedMaterials)
+                {
+                    //moe material 
+                    var moeTexture = sharedMaterial.CreateMoeTexture();
+
+                    if (moeTexture == null)
+                        continue;
+                    MOESConvertWindow.Initialize();
+                    MOESConvertWindow.CreateTexture(moeTexture);
+                    MOESConvertWindow.ModifyMaterial(moeTexture);
+
+                    moeTexture.material.SetBloodTextures(bloodDecalMaterial);
+                }
             }
+
+            var avatarPath = outputDirectoryPath.ToUnityRelativePath() + "/" + creatureId + ".prefab";
+            var iconPath = outputDirectoryPath.ToUnityRelativePath() + "/" + creatureId + "Icon.png";
+
+            var builtItem = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
+                InteractionMode.AutomatedAction);
+
+            //JSON 
+            GenerateJsonFiles(creatureId,outputDirectoryPath.AssetPathToFullPath());
+
+            GenerateIcon(item, iconPath);
+
+            AssetDatabase.Refresh();
+
+            var currentAddressableGroup = settings.FindGroup(addressableGroupName);
+
+            if (currentAddressableGroup == null)
+            {
+                var defaultAddressableGroup = settings.FindGroup("Default");
+
+                currentAddressableGroup = settings.CreateGroup(addressableGroupName, false, false, true,
+                    defaultAddressableGroup.Schemas,
+                    typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+            }
+
+            settings.DefaultGroup = currentAddressableGroup;
+
+            AddAssetToAddressableGroup(iconPath, creatureId + "Icon");
+            AddAssetToAddressableGroup(avatarPath, creatureId);
+
+            AssetDatabase.Refresh();
+             
+            Destroy(imitatorGameObject);
         }
-
-        var avatarPath = path.ToUnityRelativePath() + "/" + gameObjectName + ".prefab";
-        var iconPath = path.ToUnityRelativePath() + "/" + gameObjectName + "Icon.png";
-
-        var builtItem = PrefabUtility.SaveAsPrefabAssetAndConnect(itemGameObject, avatarPath,
-            InteractionMode.AutomatedAction);
-
-        //JSON
-        GenerateJsonFiles(path);
-
-        GenerateIcon(item, iconPath);
-
-        AssetDatabase.Refresh();
-
-        var currentAddressableGroup = settings.FindGroup(gameObjectName);
-
-        if (currentAddressableGroup == null)
-        {
-            var defaultAddressableGroup = settings.FindGroup("Default");
-
-            currentAddressableGroup = settings.CreateGroup(gameObjectName, false, false, true,
-                defaultAddressableGroup.Schemas,
-                typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
-        }
-
-        settings.DefaultGroup = currentAddressableGroup;
-
-        AddAssetToAddressableGroup(iconPath, gameObjectName + "Icon");
-        AddAssetToAddressableGroup(avatarPath, gameObjectName);
-
-        var newBloodMaterialPath = path.ToUnityRelativePath() + "/" + "BloodDecal.mat";
+        
+        
+        //create a common blood decal material
+        var newBloodMaterialPath = outputDirectoryPath.ToUnityRelativePath() + "/" + "BloodDecal.mat";
         AssetDatabase.CreateAsset(bloodDecalMaterial, newBloodMaterialPath);
         AddAssetToAddressableGroup(newBloodMaterialPath, "BloodDecalMaterial");
-
-        AssetDatabase.Refresh();
         EditorUtility.FocusProjectWindow();
-        Selection.activeObject = builtItem;
-
+        Selection.activeObject = AssetDatabase.LoadAssetAtPath<Material>(newBloodMaterialPath);
+        
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
         //exit play mode
         EditorApplication.ExecuteMenuItem("Edit/Play");
+    } 
 
-        yield return null;
+    private List<GameObject> LoadSourcePrefabsFromDirectory(string directoryAssetPath)
+    {
+        var fullPath = directoryAssetPath.AssetPathToFullPath();
+
+        var inputObjectPaths = Directory.GetFiles(fullPath, "*.prefab", SearchOption.TopDirectoryOnly);
+
+        var sourcePrefabs = new List<GameObject>();
+
+        foreach (var inputObjectPath in inputObjectPaths)
+        {
+            var sourcePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(inputObjectPath.ToUnityRelativePath());
+
+            if (sourcePrefab == null)
+                continue;
+
+            var errors = new List<string>();
+            if (!sourcePrefab.CanBeMadeIntoCustomAvatar(out errors))
+            {
+                continue;
+            }
+
+            sourcePrefabs.Add(sourcePrefab);
+        }
+
+        return sourcePrefabs;
     }
 
     public IEnumerator TryGenerateWindowsLabel()
@@ -401,7 +377,7 @@ public class CustomAvatarMapper : MonoBehaviour
         entry.SetAddress(addressName, false);
     }
 
-    private void GenerateJsonFiles(string path)
+    private void GenerateJsonFiles(string creatureId, string path)
     {
         var bonesJson = JsonConvert.SerializeObject(bones, Formatting.Indented);
         var extraDimensionJson = JsonConvert.SerializeObject(extraDimension, Formatting.Indented);
@@ -424,7 +400,7 @@ public class CustomAvatarMapper : MonoBehaviour
         }
 
 
-        var exportsPath = path.ToUnityRelativePath() + "/" + gameObjectName + "JSON";
+        var exportsPath = path.ToUnityRelativePath() + "/" + creatureId + "JSON";
 
         if (!Directory.Exists(exportsPath))
             Directory.CreateDirectory(exportsPath);
@@ -434,9 +410,9 @@ public class CustomAvatarMapper : MonoBehaviour
             if (Path.GetExtension(file) == ".json")
             {
                 var newFile = file.Replace(templatesPath, exportsPath);
-                newFile = newFile.Replace("CAF", gameObjectName);
+                newFile = newFile.Replace("CAF", creatureId);
                 var templateContent = File.ReadAllText(file);
-                var exportContent = templateContent.Replace("CAF", gameObjectName)
+                var exportContent = templateContent.Replace("CAF", creatureId)
                     .Replace("[BONESJSON]", bonesJson)
                     .Replace("[EXTRADIMENSIONJSON]", extraDimensionJson);
 
@@ -449,26 +425,6 @@ public class CustomAvatarMapper : MonoBehaviour
                 File.WriteAllText(newFile, exportContent);
             }
         }
-    }
-
-    private void Update()
-    {
-        if (!mapped)
-            return;
-
-        foreach (var boneMapper in CustomAvatar.boneMappers)
-        {
-            var baseBone = sampleBaseAnimator.GetBoneTransform(boneMapper.Value);
-            var imitatorBone = sampleImitatorAnimator.GetBoneTransform(boneMapper.Value);
-
-            if (baseBone == null || imitatorBone == null)
-                continue;
-
-            imitatorBone.rotation = baseBone.rotation * Quaternion.Euler(bones[boneMapper.Key].x,
-                bones[boneMapper.Key].y, bones[boneMapper.Key].z);
-        }
-
-        sampleImitatorGameObject.transform.localScale = extraDimension;
     }
 
     private float FormatRotationAngle(float angle)

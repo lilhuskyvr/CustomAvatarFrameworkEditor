@@ -59,7 +59,7 @@ public static class MaterialExtension
         material.SetTexture(Layer1, bloodDecalMaterial.GetTexture(Layer1));
         material.SetTexture(Layer1NormalMap, bloodDecalMaterial.GetTexture(Layer1NormalMap));
         material.SetFloat(UseReveal, 1);
-        
+
         AssetDatabase.SaveAssets();
     }
 }
