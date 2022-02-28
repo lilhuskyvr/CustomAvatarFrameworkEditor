@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,38 +8,46 @@ namespace CustomAvatarFramework.Editor.Items
 {
     public class CustomAvatarRecipe : MonoBehaviour
     {
-        [HideInInspector] public string slotName;
         public bool changeBlendShapes;
 
         public List<BlendShapeItem> blendShapeItems = new List<BlendShapeItem>();
+        [HideInInspector] public SkinnedMeshRenderer rootSkinnedMeshRenderer;
+        [HideInInspector] public SkinnedMeshRenderer blendShapeSkinnedMeshRenderer;
 
-        public void ChangeBlendShape(SkinnedMeshRenderer skinnedMeshRenderer)
+        public void ChangeBlendShape()
         {
             if (!changeBlendShapes)
                 return;
 
+            if (blendShapeSkinnedMeshRenderer == null)
+                return;
+
             foreach (var item in blendShapeItems)
             {
-                skinnedMeshRenderer.SetBlendShapeWeight(item.index, item.value);
+                blendShapeSkinnedMeshRenderer.SetBlendShapeWeight(item.index, item.value);
             }
         }
 
-        public void AttachToBody(CustomAvatarBody customAvatarBody)
+        public void AttachToBody(GameObject instance)
         {
-            //dont do anything is body already has the slot
-            if (customAvatarBody.filledSlotNames.Contains(slotName))
+            if (rootSkinnedMeshRenderer == null)
                 return;
-            var bodySkinnedMeshRenderer = customAvatarBody.GetComponent<SkinnedMeshRenderer>();
+
+            var matchedRootSkinnedMeshRenderer = instance.GetComponentsInChildren<SkinnedMeshRenderer>()
+                .FirstOrDefault(s => s.name == rootSkinnedMeshRenderer.name);
+            
+            if (matchedRootSkinnedMeshRenderer == null)
+                return;
+
             foreach (var skinnedMeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                var newSmr = Instantiate(bodySkinnedMeshRenderer, bodySkinnedMeshRenderer.gameObject.transform.parent);
-                newSmr.name = slotName;
+                var newSmr = Instantiate(matchedRootSkinnedMeshRenderer, instance.transform);
+                newSmr.name = name;
                 newSmr.sharedMesh = skinnedMeshRenderer.sharedMesh;
                 newSmr.sharedMaterials = skinnedMeshRenderer.sharedMaterials;
             }
-
-            //registered slot name
-            customAvatarBody.filledSlotNames.Add(slotName);
+            
+            DestroyImmediate(matchedRootSkinnedMeshRenderer.gameObject, true);
         }
     }
 }

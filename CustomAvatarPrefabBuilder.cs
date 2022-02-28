@@ -31,14 +31,14 @@ public class CustomAvatarPrefabBuilder : MonoBehaviour
     public void Build()
     {
         numberOfPrefabs = 0;
-        
+
         var customAvatarSlots = prefab.GetComponentsInChildren<CustomAvatarSlot>();
 
         var recipeLists = new Queue<List<CustomAvatarRecipe>>();
 
         var firstCustomAvatarSlot = customAvatarSlots[0];
-        firstCustomAvatarSlot.customAvatarRecipe.slotName = firstCustomAvatarSlot.slotName;
-
+        firstCustomAvatarSlot.customAvatarRecipe.rootSkinnedMeshRenderer =
+            firstCustomAvatarSlot.rootSkinnedMeshRenderer;
 
         recipeLists.Enqueue(new List<CustomAvatarRecipe> { firstCustomAvatarSlot.customAvatarRecipe });
 
@@ -53,41 +53,29 @@ public class CustomAvatarPrefabBuilder : MonoBehaviour
 
             if (recipeList.Count == customAvatarSlots.Length)
             {
-                var instance = Instantiate(prefab, transform.position + numberOfPrefabs * 2 * -transform.right,
+                var instance = Instantiate(prefab, transform.position + numberOfPrefabs * -transform.right,
                     transform.rotation);
-                
-                //destroy all custom avatar slots
-                foreach (var customAvatarSlot in instance.GetComponentsInChildren<CustomAvatarSlot>())
-                {
-                    DestroyImmediate(customAvatarSlot);
-                }
 
                 //annotate the number
                 instance.name = prefab.name + (numberOfPrefabs + 1);
-
-                var customAvatarBody = instance.GetComponentInChildren<CustomAvatarBody>();
 
                 foreach (var recipe in recipeList)
                 {
                     if (recipe == null)
                         continue;
 
-                    var recipeInstance = Instantiate(recipe, instance.transform);
+                    recipe.AttachToBody(instance);
 
-                    if (!customAvatarBody)
-                        continue;
-
-                    recipeInstance.AttachToBody(customAvatarBody);
-
-                    recipeInstance.ChangeBlendShape(customAvatarBody.gameObject.GetComponent<SkinnedMeshRenderer>());
+                    recipe.ChangeBlendShape();
                 }
 
                 numberOfPrefabs++;
                 continue;
-            }
+            } 
 
             var nextCustomAvatarSlot = customAvatarSlots[recipeList.Count];
-            nextCustomAvatarSlot.customAvatarRecipe.slotName = nextCustomAvatarSlot.slotName;
+            nextCustomAvatarSlot.customAvatarRecipe.rootSkinnedMeshRenderer =
+                nextCustomAvatarSlot.rootSkinnedMeshRenderer;
 
             var newRecipe = new List<CustomAvatarRecipe>(recipeList);
             newRecipe.Add(nextCustomAvatarSlot.customAvatarRecipe);
