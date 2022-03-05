@@ -12,29 +12,36 @@ namespace CustomAvatarFramework.Editor.Items
 
         public List<BlendShapeItem> blendShapeItems = new List<BlendShapeItem>();
         [HideInInspector] public SkinnedMeshRenderer rootSkinnedMeshRenderer;
-        [HideInInspector] public SkinnedMeshRenderer blendShapeSkinnedMeshRenderer;
+        [HideInInspector]
+        public CustomAvatarSlot slot;
 
-        public void ChangeBlendShape()
+        public void ChangeBlendShape(GameObject instance)
         {
             if (!changeBlendShapes)
                 return;
 
-            if (blendShapeSkinnedMeshRenderer == null)
+            if (slot.blendShapeSkinnedMeshRenderer == null)
                 return;
 
+            var matchedBlendShapeSkinnedMeshRenderer = instance.GetComponentsInChildren<SkinnedMeshRenderer>()
+                .FirstOrDefault(s => s.name == slot.blendShapeSkinnedMeshRenderer.name);
+            
+            if (matchedBlendShapeSkinnedMeshRenderer == null)
+                return;
+            
             foreach (var item in blendShapeItems)
             {
-                blendShapeSkinnedMeshRenderer.SetBlendShapeWeight(item.index, item.value);
+                matchedBlendShapeSkinnedMeshRenderer.SetBlendShapeWeight(item.index, item.value);
             }
         }
 
         public void AttachToBody(GameObject instance)
         {
-            if (rootSkinnedMeshRenderer == null)
+            if (slot.rootSkinnedMeshRenderer == null)
                 return;
 
             var matchedRootSkinnedMeshRenderer = instance.GetComponentsInChildren<SkinnedMeshRenderer>()
-                .FirstOrDefault(s => s.name == rootSkinnedMeshRenderer.name);
+                .FirstOrDefault(s => s.name == slot.rootSkinnedMeshRenderer.name);
             
             if (matchedRootSkinnedMeshRenderer == null)
                 return;
