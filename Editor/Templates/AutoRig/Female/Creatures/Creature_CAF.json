@@ -8,6 +8,7 @@
   "name": "HumanFemale",
   "displayName": "{Human}",
   "prefabAddress": "Bas.Creature.HumanFemale",
+  "animatorControllerAddress": "Bas.AnimController.Human",
   "removeMeshWhenPooled": false,
   "gender": "Female",
   "health": 50,
@@ -16,18 +17,21 @@
   "focus": 30.0,
   "focusRegen": 2.0,
   "baseXP": 20,
+  "physicsOffDamageMult": 0.75,
   "overlapRadius": 5.0,
   "overlapMinDelay": 0.5,
   "overlapMask": -1929369600,
   "containerID": "NPCCAF",
   "factionId": 3,
+  "countTowardsMaxAlive": true,
   "brainId": "HumanMedium",
   "avoidancePriority": 10,
+  "jumpEffectId": "Jump",
+  "kickEffectId": "Kick",
+  "playerFallDamageEffectId": "Fall",
   "voices": [
     "HumanFemale3"
   ],
-  "openHandPoseId": "DefaultOpen",
-  "closeHandPoseId": "DefaultClose",
   "randomMinHeight": 1.6,
   "randomMaxHeight": 1.75,
   "adjustHeightToPlayer": true,
@@ -404,7 +408,8 @@
         "penetrationDeepEffectId": "PenetrationDeepFlesh",
         "sliceForceKill": true,
         "sliceSeparationForce": 3.5,
-        "sliceVelocityMultiplier": 0.5
+        "sliceVelocityMultiplier": 0.5,
+        "locomotionVelocityCorrection": 130.0
       },
       {
         "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
@@ -421,7 +426,8 @@
         "penetrationDeepEffectId": "PenetrationDeepBleeding",
         "sliceForceKill": true,
         "sliceSeparationForce": 3.0,
-        "sliceVelocityMultiplier": 0.5
+        "sliceVelocityMultiplier": 0.5,
+        "locomotionVelocityCorrection": 130.0
       },
       {
         "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
@@ -438,7 +444,8 @@
         "penetrationDeepEffectId": "PenetrationDeepFlesh",
         "sliceForceKill": true,
         "sliceSeparationForce": 3.0,
-        "sliceVelocityMultiplier": 0.5
+        "sliceVelocityMultiplier": 0.5,
+        "locomotionVelocityCorrection": 130.0
       },
       {
         "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
@@ -455,7 +462,8 @@
         "penetrationDeepEffectId": "PenetrationDeepFlesh",
         "sliceForceKill": true,
         "sliceSeparationForce": 3.0,
-        "sliceVelocityMultiplier": 0.5
+        "sliceVelocityMultiplier": 0.5,
+        "locomotionVelocityCorrection": 130.0
       },
       {
         "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
@@ -472,7 +480,8 @@
         "penetrationDeepEffectId": "PenetrationDeepFlesh",
         "sliceForceKill": true,
         "sliceSeparationForce": 3.0,
-        "sliceVelocityMultiplier": 0.5
+        "sliceVelocityMultiplier": 0.5,
+        "locomotionVelocityCorrection": 130.0
       },
       {
         "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
@@ -489,7 +498,8 @@
         "penetrationDeepEffectId": "PenetrationDeepFlesh",
         "sliceForceKill": true,
         "sliceSeparationForce": 3.0,
-        "sliceVelocityMultiplier": 0.5
+        "sliceVelocityMultiplier": 0.5,
+        "locomotionVelocityCorrection": 130.0
       },
       {
         "$type": "ThunderRoad.CreatureData+PartData, ThunderRoad",
@@ -506,7 +516,8 @@
         "penetrationDeepEffectId": "PenetrationDeepFlesh",
         "sliceForceKill": true,
         "sliceSeparationForce": 3.0,
-        "sliceVelocityMultiplier": 0.5
+        "sliceVelocityMultiplier": 0.5,
+        "locomotionVelocityCorrection": 130.0
       }
     ]
   },
@@ -515,6 +526,362 @@
   "expressionDeathId": "Death",
   "expressionChokeId": "Choke",
   "expressionAngryId": "Angry",
+  "eyeVerticalAngleClamps": {
+    "x": 3.0,
+    "y": 15.0
+  },
+  "eyeHorizontalAngleClamps": {
+    "x": -20.0,
+    "y": 20.0
+  },
+  "eyeClips": [
+    {
+      "$type": "ThunderRoad.CreatureData+EyeClip, ThunderRoad",
+      "clipName": "Blink",
+      "eyeTagFilter": "",
+      "duration": 0.5,
+      "minMaxDelayPerEye": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "openCurve": {
+        "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+        "keys": [
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.8333164,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.3416748,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 1.0,
+            "outWeight": 1.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.610803246,
+            "value": 0.5033,
+            "inTangent": 2.26358,
+            "outTangent": 2.26358,
+            "inWeight": 0.109121464,
+            "outWeight": 0.261299,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.2497149,
+            "outTangent": 0.2497149,
+            "inWeight": 0.7691764,
+            "outWeight": 0.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          }
+        ],
+        "length": 4,
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "playAutomaticallyWhileAlive": true,
+      "minMaxBetweenPlays": {
+        "x": 2.5,
+        "y": 5.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeClip, ThunderRoad",
+      "clipName": "Hurt",
+      "eyeTagFilter": "",
+      "duration": 0.75,
+      "minMaxDelayPerEye": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "openCurve": {
+        "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+        "keys": [
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.8333164,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.330856323,
+            "value": 0.1890564,
+            "inTangent": -0.307760626,
+            "outTangent": -0.307760626,
+            "inWeight": 1.0,
+            "outWeight": 0.500143349,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.505132735,
+            "value": 0.1994219,
+            "inTangent": 0.4271316,
+            "outTangent": 0.4271316,
+            "inWeight": 0.333333343,
+            "outWeight": 0.5165443,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.691888452,
+            "value": 0.599994957,
+            "inTangent": 2.26358,
+            "outTangent": 2.26358,
+            "inWeight": 0.109121464,
+            "outWeight": 0.261299,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.2497149,
+            "outTangent": 0.2497149,
+            "inWeight": 0.7691764,
+            "outWeight": 0.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          }
+        ],
+        "length": 5,
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "playAutomaticallyWhileAlive": false,
+      "minMaxBetweenPlays": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeClip, ThunderRoad",
+      "clipName": "DeathSad",
+      "eyeTagFilter": "",
+      "duration": 3.0,
+      "minMaxDelayPerEye": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "openCurve": {
+        "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+        "keys": [
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.119832486,
+            "value": 0.403291225,
+            "inTangent": -2.9529686,
+            "outTangent": -2.9529686,
+            "inWeight": 0.208598554,
+            "outWeight": 0.205128387,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.544475734,
+            "value": 0.499212265,
+            "inTangent": -2.6194663,
+            "outTangent": -2.6194663,
+            "inWeight": 0.333333343,
+            "outWeight": 0.109812558,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          }
+        ],
+        "length": 4,
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "playAutomaticallyWhileAlive": false,
+      "minMaxBetweenPlays": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeClip, ThunderRoad",
+      "clipName": "WinkRight",
+      "eyeTagFilter": "Right",
+      "duration": 0.5,
+      "minMaxDelayPerEye": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "openCurve": {
+        "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+        "keys": [
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.8333164,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.3416748,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 1.0,
+            "outWeight": 1.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.610803246,
+            "value": 0.5033,
+            "inTangent": 2.26358,
+            "outTangent": 2.26358,
+            "inWeight": 0.109121464,
+            "outWeight": 0.261299,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.2497149,
+            "outTangent": 0.2497149,
+            "inWeight": 0.7691764,
+            "outWeight": 0.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          }
+        ],
+        "length": 4,
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "playAutomaticallyWhileAlive": false,
+      "minMaxBetweenPlays": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "$type": "ThunderRoad.CreatureData+EyeClip, ThunderRoad",
+      "clipName": "WinkLeft",
+      "eyeTagFilter": "Left",
+      "duration": 0.5,
+      "minMaxDelayPerEye": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "openCurve": {
+        "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+        "keys": [
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.8333164,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.3416748,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 1.0,
+            "outWeight": 1.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 0.610803246,
+            "value": 0.5033,
+            "inTangent": 2.26358,
+            "outTangent": 2.26358,
+            "inWeight": 0.109121464,
+            "outWeight": 0.261299,
+            "weightedMode": "None",
+            "tangentMode": 0
+          },
+          {
+            "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.2497149,
+            "outTangent": 0.2497149,
+            "inWeight": 0.7691764,
+            "outWeight": 0.0,
+            "weightedMode": "None",
+            "tangentMode": 0
+          }
+        ],
+        "length": 4,
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "playAutomaticallyWhileAlive": false,
+      "minMaxBetweenPlays": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
   "forceMaxPosition": 3000.0,
   "forceMaxRotation": 300.0,
   "forcePositionSpringDamper": {
@@ -554,16 +921,17 @@
     "y": 1.0
   },
   "locomotionMass": 70.0,
-  "locomotionSpeed": 0.2,
+  "locomotionForwardSpeed": 0.16,
+  "locomotionBackwardSpeed": 0.16,
+  "locomotionStrafeSpeed": 0.16,
+  "locomotionRunSpeedAdd": 0.07,
+  "locomotionCrouchSpeed": 0.1,
   "locomotionAirSpeed": 0.04,
   "locomotionJumpForce": 0.3,
   "locomotionJumpClimbVerticalMultiplier": 1.0,
   "locomotionJumpClimbHorizontalMultiplier": 0.4,
   "jumpClimbVerticalMaxVelocityRatio": 20.0,
   "locomotionJumpMaxDuration": 0.6,
-  "locomotionBackwardSpeedMult": 1.0,
-  "locomotionStrafeSpeedMult": 1.0,
-  "locomotionRunSpeedMult": 1.5,
   "locomotionGroundDrag": 3.0,
   "locomotionFlyDrag": 0.3,
   "playerFallDamageCurve": {
@@ -596,6 +964,102 @@
     "preWrapMode": "ClampForever",
     "postWrapMode": "ClampForever"
   },
-  "playerFallDamageEffectId": "Fall",
-  "jumpEffectId": "Jump"
+  "gripRecoverTime": 0.5,
+  "waterLocomotionDragMultiplierCurve": {
+    "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+    "keys": [
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 0.0,
+        "value": 1.0,
+        "inTangent": 0.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.333333343,
+        "weightedMode": "None",
+        "tangentMode": 0
+      },
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 1.0,
+        "value": 12.0,
+        "inTangent": 27.4242725,
+        "outTangent": 27.4242725,
+        "inWeight": 0.0388457775,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      }
+    ],
+    "length": 2,
+    "preWrapMode": "ClampForever",
+    "postWrapMode": "ClampForever"
+  },
+  "waterHandSpringMultiplierCurve": {
+    "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+    "keys": [
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 0.0,
+        "value": 0.35,
+        "inTangent": 0.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      },
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 1.0,
+        "value": 0.15,
+        "inTangent": 0.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      }
+    ],
+    "length": 2,
+    "preWrapMode": "ClampForever",
+    "postWrapMode": "ClampForever"
+  },
+  "waterHandLocomotionVelocityCorrectionMultiplier": 0.5,
+  "waterJumpForceMutiplierCurve": {
+    "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+    "keys": [
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 0.0,
+        "value": 1.0,
+        "inTangent": 0.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      },
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 1.0,
+        "value": 0.5,
+        "inTangent": 0.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      }
+    ],
+    "length": 2,
+    "preWrapMode": "ClampForever",
+    "postWrapMode": "ClampForever"
+  },
+  "waterSwimUpForce": 10.0,
+  "waterDrowningStartTime": 30.0,
+  "waterDrowningWarningRatio": 0.7,
+  "waterDrowningDamage": 20.0,
+  "waterDrowningDamageInterval": 4.0,
+  "drownEffectId": "HumanDrown"
 }

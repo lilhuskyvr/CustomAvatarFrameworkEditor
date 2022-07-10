@@ -6,7 +6,7 @@
   "category": "1CAFs",
   "title": "3 CAFs",
   "description": "3 CAFs",
-  "loop": true,
+  "loopBehavior": "LoopSeamless",
   "maxAlive": 3,
   "alwaysAvailable": true,
   "waveSelectors": [
@@ -20,99 +20,109 @@
   "enemiesHealthMultiplier": 1.0,
   "groups": [
     {
-      "reference": "Creature",
-      "referenceID": "CAF",
-      "overrideFaction": true,
-      "factionID": 5,
-      "overrideContainer": false,
-      "overrideContainerID": "Gladiator1H",
-      "overrideBrain": false,
-      "overrideBrainID": "RecruitBrainWarrior",
-      "overrideMaxMelee": false,
-      "overrideMaxMeleeCount": 2,
-      "minMaxCount": {
-        "x": 2,
-        "y": 2
-      },
-      "spawnPointIndex": -1,
-      "conditionStepIndex": -1,
-      "conditionThreshold": 0
-    },
-    {
-      "reference": "Creature",
-      "referenceID": "CAF",
-      "overrideFaction": true,
-      "factionID": 5,
-      "overrideContainer": false,
-      "overrideContainerID": "Gladiator1H",
-      "overrideBrain": false,
-      "overrideBrainID": "RecruitBrainWarrior",
-      "overrideMaxMelee": false,
-      "overrideMaxMeleeCount": 2,
-      "minMaxCount": {
-        "x": 2,
-        "y": 2
-      },
-      "spawnPointIndex": -1,
-      "conditionStepIndex": -1,
-      "conditionThreshold": 0
-    },
-    {
-      "reference": "Creature",
-      "referenceID": "CAF",
-      "overrideFaction": true,
-      "factionID": 5,
-      "overrideContainer": false,
-      "overrideContainerID": "Gladiator1H",
-      "overrideBrain": false,
-      "overrideBrainID": "RecruitBrainWarrior",
-      "overrideMaxMelee": false,
-      "overrideMaxMeleeCount": 2,
-      "minMaxCount": {
-        "x": 2,
-        "y": 2
-      },
-      "spawnPointIndex": -1,
-      "conditionStepIndex": -1,
-      "conditionThreshold": 0
-    },
-    {
-      "reference": "Creature",
-      "referenceID": "CAF",
-      "overrideFaction": true,
-      "factionID": 5,
-      "overrideContainer": false,
-      "overrideContainerID": "Gladiator1H",
-      "overrideBrain": false,
-      "overrideBrainID": "RecruitBrainWarrior",
-      "overrideMaxMelee": false,
-      "overrideMaxMeleeCount": 2,
-      "minMaxCount": {
-        "x": 2,
-        "y": 2
-      },
-      "spawnPointIndex": -1,
-      "conditionStepIndex": -1,
-      "conditionThreshold": 0
-    },
-    {
+      "$type": "ThunderRoad.WaveData+Group, ThunderRoad",
       "reference": "Creature",
       "referenceID": "CAF",
       "overrideFaction": false,
-      "factionID": 5,
+      "factionID": 0,
       "overrideContainer": false,
-      "overrideContainerID": "Gladiator1H",
+      "overrideContainerID": "",
       "overrideBrain": false,
-      "overrideBrainID": "RecruitBrainWarrior",
+      "overrideBrainID": "",
       "overrideMaxMelee": false,
       "overrideMaxMeleeCount": 2,
+      "groupHealthMultiplier": 1.0,
       "minMaxCount": {
-        "x": 2,
+        "x": 1,
         "y": 2
       },
       "spawnPointIndex": -1,
-      "conditionStepIndex": -1,
-      "conditionThreshold": 0
+      "prereqGroupIndex": -1,
+      "prereqMaxRemainingAlive": 0
+    },
+    {
+      "$type": "ThunderRoad.WaveData+Group, ThunderRoad",
+      "reference": "Creature",
+      "referenceID": "CAF",
+      "overrideFaction": false,
+      "factionID": 0,
+      "overrideContainer": false,
+      "overrideContainerID": "",
+      "overrideBrain": false,
+      "overrideBrainID": "",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "groupHealthMultiplier": 1.0,
+      "minMaxCount": {
+        "x": 1,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "prereqGroupIndex": -1,
+      "prereqMaxRemainingAlive": 0
+    },
+    {
+      "$type": "ThunderRoad.WaveData+Group, ThunderRoad",
+      "reference": "Creature",
+      "referenceID": "CAF",
+      "overrideFaction": false,
+      "factionID": 0,
+      "overrideContainer": false,
+      "overrideContainerID": "",
+      "overrideBrain": false,
+      "overrideBrainID": "",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "groupHealthMultiplier": 1.0,
+      "minMaxCount": {
+        "x": 1,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "prereqGroupIndex": -1,
+      "prereqMaxRemainingAlive": 0
+    },
+    {
+      "$type": "ThunderRoad.WaveData+Group, ThunderRoad",
+      "reference": "Creature",
+      "referenceID": "CAF",
+      "overrideFaction": false,
+      "factionID": 0,
+      "overrideContainer": false,
+      "overrideContainerID": "",
+      "overrideBrain": false,
+      "overrideBrainID": "",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "groupHealthMultiplier": 1.0,
+      "minMaxCount": {
+        "x": 1,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "prereqGroupIndex": -1,
+      "prereqMaxRemainingAlive": 0
+    },
+    {
+      "$type": "ThunderRoad.WaveData+Group, ThunderRoad",
+      "reference": "Creature",
+      "referenceID": "CAF",
+      "overrideFaction": false,
+      "factionID": 0,
+      "overrideContainer": false,
+      "overrideContainerID": "",
+      "overrideBrain": false,
+      "overrideBrainID": "",
+      "overrideMaxMelee": false,
+      "overrideMaxMeleeCount": 2,
+      "groupHealthMultiplier": 1.0,
+      "minMaxCount": {
+        "x": 1,
+        "y": 2
+      },
+      "spawnPointIndex": -1,
+      "prereqGroupIndex": -1,
+      "prereqMaxRemainingAlive": 0
     }
   ]
 }

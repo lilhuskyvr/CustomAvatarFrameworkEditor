@@ -1,7 +1,7 @@
 {
   "$type": "ThunderRoad.ContainerData, ThunderRoad",
   "id": "NPCCAF",
-  "saveFolder": "Bas",
+  "saveFolder": "bas",
   "version": 1,
   "displayName": "",
   "description": null,
@@ -14,15 +14,14 @@
     },
     {
       "$type": "ThunderRoad.ContainerData+Content, ThunderRoad",
-      "referenceID": "Weapon1H",
       "reference": "Table",
-      "customValues": [
-        {
-          "$type": "ThunderRoad.Item+SavedValue, ThunderRoad",
-          "id": "Holder",
-          "value": "BackRight"
-        }
-      ]
+      "referenceID": "Weapon1H",
+      "quantity": 1,
+      "state": {
+        "$type": "ThunderRoad.ContentStateHolder, ThunderRoad",
+        "holderName": "BackRight"
+      },
+      "customDataList": []
     }
   ]
 }
