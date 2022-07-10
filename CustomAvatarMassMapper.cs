@@ -164,7 +164,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
         CalculateExtraDimension();
 
         bones = new Dictionary<string, Vector3>();
-        
+
         foreach (var boneMapper in CustomAvatar.boneMappers)
         {
             var baseBone = baseAnimator.GetBoneTransform(boneMapper.Value);
@@ -198,7 +198,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
         var sourcePrefabs = LoadSourcePrefabsFromDirectory(inputDirectoryPath);
 
         yield return TryGenerateWindowsLabel();
-        
+
         foreach (var sourcePrefab in sourcePrefabs)
         {
             //calibrate here first
@@ -212,7 +212,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
             var creatureId = sourcePrefab.name.Replace(" ", "");
 
             Calibrate();
-            
+
             var buildGameObject = Instantiate(sourcePrefab);
             var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
 
@@ -239,14 +239,14 @@ public class CustomAvatarMassMapper : MonoBehaviour
             buildGameObject.transform.SetParent(itemGameObject.transform);
             buildGameObject.transform.localPosition = Vector3.zero;
             buildGameObject.transform.localRotation = Quaternion.identity;
-            
+
             item.preview.transform.position = buildGameObjectAnimator.GetBoneTransform(HumanBodyBones.Head).position;
             item.preview.transform.localRotation = Quaternion.Euler(0, 180, 0);
 
             foreach (var skinnedMeshRenderer in buildGameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 skinnedMeshRenderer.updateWhenOffscreen = true;
-                
+
                 var customAvatarIgnore = skinnedMeshRenderer.GetComponent<CustomAvatarIgnore>();
 
                 if (customAvatarIgnore != null)
@@ -254,7 +254,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
                     if (customAvatarIgnore.ignoreMOES)
                         continue;
                 }
-                
+
                 skinnedMeshRenderer.AddRevealDecal();
 
                 foreach (var sharedMaterial in skinnedMeshRenderer.sharedMaterials)
@@ -279,7 +279,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
                 InteractionMode.AutomatedAction);
 
             //JSON 
-            GenerateJsonFiles(creatureId,outputDirectoryPath.AssetPathToFullPath());
+            GenerateJsonFiles(creatureId, outputDirectoryPath.AssetPathToFullPath());
 
             GenerateIcon(item, iconPath);
 
@@ -302,22 +302,22 @@ public class CustomAvatarMassMapper : MonoBehaviour
             AddAssetToAddressableGroup(avatarPath, creatureId);
 
             AssetDatabase.Refresh();
-             
+            
             Destroy(imitatorGameObject);
         }
-        
-        
+
+
         //create a common blood decal material
         var newBloodMaterialPath = outputDirectoryPath.ToUnityRelativePath() + "/" + "BloodDecal.mat";
         AssetDatabase.CreateAsset(bloodDecalMaterial, newBloodMaterialPath);
         AddAssetToAddressableGroup(newBloodMaterialPath, "BloodDecalMaterial");
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = AssetDatabase.LoadAssetAtPath<Material>(newBloodMaterialPath);
-        
+
         EditorUtility.DisplayDialog("Complete", "File built successfully", "OK");
         //exit play mode
         EditorApplication.ExecuteMenuItem("Edit/Play");
-    } 
+    }
 
     private List<GameObject> LoadSourcePrefabsFromDirectory(string directoryAssetPath)
     {
@@ -334,9 +334,16 @@ public class CustomAvatarMassMapper : MonoBehaviour
             if (sourcePrefab == null)
                 continue;
 
+            Debug.Log("Found a source prefab" + sourcePrefab.name);
+
             var errors = new List<string>();
             if (!sourcePrefab.CanBeMadeIntoCustomAvatar(out errors))
             {
+                foreach (var error in errors)
+                {
+                    Debug.Log(error);
+                }
+
                 continue;
             }
 

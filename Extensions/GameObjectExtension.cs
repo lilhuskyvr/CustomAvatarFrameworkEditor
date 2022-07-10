@@ -240,7 +240,8 @@ public static class GameObjectExtension
 
             if (skinnedMeshRenderer.sharedMesh.isReadable == false)
             {
-                errors = new List<string> { "SkinnedMeshRenderer mesh is not readable" };
+                errors = new List<string>
+                    { "SkinnedMeshRenderer " + skinnedMeshRenderer.sharedMesh.name + " mesh is not readable" };
                 return false;
             }
         }
