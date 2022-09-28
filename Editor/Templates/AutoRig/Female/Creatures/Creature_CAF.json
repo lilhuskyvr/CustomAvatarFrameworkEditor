@@ -3,7 +3,7 @@
   "id": "CAF",
   "saveFolder": "bas",
   "version": 6,
-  "pooledCount": 20,
+  "pooledCount": 5,
   "androidPooledCount": 5,
   "name": "HumanFemale",
   "displayName": "{Human}",

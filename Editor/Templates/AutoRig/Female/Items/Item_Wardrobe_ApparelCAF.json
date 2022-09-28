@@ -153,6 +153,7 @@
       "version": 2,
       "avatarItemId": "CAF",
       "avatarHeight": 1.0,
+      "disableDynamicBones": false,
       "extraHipPosition": {
         "x": 0.0,
         "y": 0.0
