@@ -6,7 +6,6 @@ using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
 using ThunderRoad;
-using UniGLTF;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;

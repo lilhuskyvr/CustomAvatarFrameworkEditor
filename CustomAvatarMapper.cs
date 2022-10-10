@@ -2,12 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
 using ThunderRoad;
-using UniGLTF;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
