@@ -6,7 +6,6 @@ using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
 using ThunderRoad;
-using UniGLTF;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -35,7 +34,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
     // Start is called before the first frame update
 
     [HideInInspector]
-    public string bloodDecalMaterialPath = "Assets/CustomAvatarFramework/Resources/BloodDecalMaterial.mat";
+    public string bloodDecalMaterialPath = "Assets/CustomAvatarFrameworkEditor/Resources/BloodDecalMaterial.mat";
 
     [HideInInspector] public Material bloodDecalMaterial;
 
@@ -65,7 +64,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
         {
             baseGameObject =
                 Instantiate(
-                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/CustomAvatarFramework/Resources/BaseMesh.prefab"),
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/CustomAvatarFrameworkEditor/Resources/BaseMesh.prefab"),
                     transform.position, transform.rotation);
         }
 
@@ -76,7 +75,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
             tPoseController =
                 Instantiate(
                     AssetDatabase.LoadAssetAtPath<AnimatorController>(
-                        "Assets/CustomAvatarFramework/Resources/TPose.controller"));
+                        "Assets/CustomAvatarFrameworkEditor/Resources/TPose.controller"));
         }
 
         baseAnimator.runtimeAnimatorController = Instantiate(tPoseController);
@@ -388,8 +387,8 @@ public class CustomAvatarMassMapper : MonoBehaviour
     {
         var bonesJson = JsonConvert.SerializeObject(bones, Formatting.Indented);
         var extraDimensionJson = JsonConvert.SerializeObject(extraDimension, Formatting.Indented);
-        var directories = new Stack<string>();
-        var templatesPath = Application.dataPath + "/CustomAvatarFramework/Editor/Templates/AutoRig";
+        var directories = new Stack<string>(); 
+        var templatesPath = Application.dataPath + "/CustomAvatarFrameworkEditor/Editor/Templates/AutoRig";
         directories.Push(templatesPath);
 
         var files = new List<string>();
@@ -561,7 +560,7 @@ public class CustomAvatarMassMapper : MonoBehaviour
     public static void LoadScene()
     {
         EditorApplication.ExecuteMenuItem("Edit/Play");
-        EditorSceneManager.LoadSceneInPlayMode("Assets/CustomAvatarFramework/Scenes/LilHuskyBuilder.unity",
+        EditorSceneManager.LoadSceneInPlayMode("Assets/CustomAvatarFrameworkEditor/Scenes/LilHuskyBuilder.unity",
             new LoadSceneParameters());
     }
 

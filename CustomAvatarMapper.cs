@@ -2,12 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using CustomAvatarFramework.Editor;
 using CustomAvatarFramework.Editor.Items;
 using Newtonsoft.Json;
 using ThunderRoad;
-using UniGLTF;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -45,7 +43,7 @@ public class CustomAvatarMapper : MonoBehaviour
     [HideInInspector] public Animator sampleImitatorAnimator;
     // Start is called before the first frame update
 
-    public string bloodDecalMaterialPath = "Assets/CustomAvatarFramework/Resources/BloodDecalMaterial.mat";
+    public string bloodDecalMaterialPath = "Assets/CustomAvatarFrameworkEditor/Resources/BloodDecalMaterial.mat";
 
     [HideInInspector] public Material bloodDecalMaterial;
 
@@ -73,7 +71,7 @@ public class CustomAvatarMapper : MonoBehaviour
         {
             baseGameObject =
                 Instantiate(
-                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/CustomAvatarFramework/Resources/BaseMesh.prefab"),
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/CustomAvatarFrameworkEditor/Resources/BaseMesh.prefab"),
                     transform.position, transform.rotation);
         }
 
@@ -84,7 +82,7 @@ public class CustomAvatarMapper : MonoBehaviour
             tPoseController =
                 Instantiate(
                     AssetDatabase.LoadAssetAtPath<AnimatorController>(
-                        "Assets/CustomAvatarFramework/Resources/TPose.controller"));
+                        "Assets/CustomAvatarFrameworkEditor/Resources/TPose.controller"));
         }
 
         if (skinningTestController == null)
@@ -92,7 +90,7 @@ public class CustomAvatarMapper : MonoBehaviour
             skinningTestController =
                 Instantiate(
                     AssetDatabase.LoadAssetAtPath<AnimatorController>(
-                        "Assets/CustomAvatarFramework/Resources/SkinningTest.controller"));
+                        "Assets/CustomAvatarFrameworkEditor/Resources/SkinningTest.controller"));
         }
 
         baseAnimator.runtimeAnimatorController = Instantiate(tPoseController);
@@ -343,7 +341,7 @@ public class CustomAvatarMapper : MonoBehaviour
 
         if (currentAddressableGroup == null)
         {
-            var defaultAddressableGroup = settings.FindGroup("Default");
+            var defaultAddressableGroup = settings.groups[0]; 
 
             currentAddressableGroup = settings.CreateGroup(gameObjectName, false, false, true,
                 defaultAddressableGroup.Schemas,
@@ -406,7 +404,7 @@ public class CustomAvatarMapper : MonoBehaviour
         var bonesJson = JsonConvert.SerializeObject(bones, Formatting.Indented);
         var extraDimensionJson = JsonConvert.SerializeObject(extraDimension, Formatting.Indented);
         var directories = new Stack<string>();
-        var templatesPath = Application.dataPath + "/CustomAvatarFramework/Editor/Templates/AutoRig";
+        var templatesPath = Application.dataPath + "/CustomAvatarFrameworkEditor/Editor/Templates/AutoRig";
         directories.Push(templatesPath);
 
         var files = new List<string>();
@@ -598,7 +596,7 @@ public class CustomAvatarMapper : MonoBehaviour
     public static void LoadScene()
     {
         EditorApplication.ExecuteMenuItem("Edit/Play");
-        EditorSceneManager.LoadSceneInPlayMode("Assets/CustomAvatarFramework/Scenes/LilHuskyBuilder.unity",
+        EditorSceneManager.LoadSceneInPlayMode("Assets/CustomAvatarFrameworkEditor/Scenes/LilHuskyBuilder.unity",
             new LoadSceneParameters());
     }
 
