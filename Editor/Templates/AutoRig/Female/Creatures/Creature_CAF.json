@@ -6,7 +6,7 @@
   "sensitiveFilterBehaviour": "Discard",
   "version": 6,
   "name": "HumanFemale",
-  "pooledCount": 20,
+  "pooledCount": 5,
   "androidPooledCount": 5,
   "prefabAddress": "Bas.Creature.HumanFemale",
   "animatorControllerAddress": "Bas.AnimController.Human",

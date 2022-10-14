@@ -725,7 +725,7 @@ MonoBehaviour:
   imitatorAnimator: {fileID: 0}
   sampleBaseAnimator: {fileID: 0}
   sampleImitatorAnimator: {fileID: 0}
-  bloodDecalMaterialPath: Assets/CustomAvatarFramework/Resources/BloodDecalMaterial.mat
+  bloodDecalMaterialPath: Assets/CustomAvatarFrameworkEditor/Resources/BloodDecalMaterial.mat
   bloodDecalMaterial: {fileID: 0}
   extraDimension: {x: 0, y: 0, z: 0}
   mapped: 0
