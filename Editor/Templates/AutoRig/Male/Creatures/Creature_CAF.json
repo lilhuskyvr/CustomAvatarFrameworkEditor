@@ -9,7 +9,7 @@
   "pooledCount": 5,
   "androidPooledCount": 5,
   "prefabAddress": "Bas.Creature.HumanMale",
-  "animatorBundleAddress": "Bas.AnimController.Human",
+  "animatorBundleAddress": "Animation.Controller.Human",
   "removeMeshWhenPooled": false,
   "gender": "Male",
   "health": 50,
