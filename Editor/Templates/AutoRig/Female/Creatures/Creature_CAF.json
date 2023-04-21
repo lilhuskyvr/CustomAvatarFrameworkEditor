@@ -9,7 +9,7 @@
   "pooledCount": 5,
   "androidPooledCount": 5,
   "prefabAddress": "Bas.Creature.HumanFemale",
-  "animatorControllerAddress": "Bas.AnimController.Human",
+  "animatorBundleAddress": "Animation.Controller.Human",
   "removeMeshWhenPooled": false,
   "gender": "Female",
   "health": 50,
@@ -656,7 +656,7 @@
   "expressionChokeId": "Choke",
   "expressionAngryId": "Angry",
   "eyeVerticalAngleClamps": {
-    "x": 3.0,
+    "x": -10.0,
     "y": 15.0
   },
   "eyeHorizontalAngleClamps": {
@@ -1204,7 +1204,40 @@
     "preWrapMode": "ClampForever",
     "postWrapMode": "ClampForever"
   },
-  "waterSwimUpForce": 10.0,
+  "waterSwimUpForce": 5.0,
+  "waterHandMovementForce": 10.0,
+  "waterHandMovementMaxMagnitude": 10.0,
+  "waterHandMovementForceCurve": {
+    "$type": "UnityEngine.AnimationCurve, UnityEngine.CoreModule",
+    "keys": [
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 0.0,
+        "value": 0.0,
+        "inTangent": 0.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      },
+      {
+        "$type": "UnityEngine.Keyframe, UnityEngine.CoreModule",
+        "time": 1.0,
+        "value": 1.0,
+        "inTangent": 0.0,
+        "outTangent": 0.0,
+        "inWeight": 0.0,
+        "outWeight": 0.0,
+        "weightedMode": "None",
+        "tangentMode": 0
+      }
+    ],
+    "length": 2,
+    "preWrapMode": "ClampForever",
+    "postWrapMode": "ClampForever"
+  },
+  "waterMaxPlayerVelocityMagnitude": 3.0,
   "waterDrowningStartTime": 30.0,
   "waterDrowningWarningRatio": 0.7,
   "waterDrowningDamage": 20.0,

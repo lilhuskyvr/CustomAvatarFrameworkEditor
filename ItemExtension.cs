@@ -8,8 +8,6 @@ namespace CustomAvatarFramework.Editor
     {
         public static void AutoGenerateParams(this Item item)
         {
-            IconManager.SetIcon(item.gameObject, null);
-
             if (!item.gameObject.activeInHierarchy) return;
 
             Transform holderPoint = null;

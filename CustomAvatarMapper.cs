@@ -270,8 +270,8 @@ public class CustomAvatarMapper : MonoBehaviour
         var buildGameObjectAnimator = buildGameObject.GetComponent<Animator>();
 
         buildGameObject.AddCustomAvatarHeads();
-        buildGameObject.AddCustomAvatarDynamicBones();
-        buildGameObject.AddCustomAvatarDynamicBoneColliders();
+        //buildGameObject.AddCustomAvatarDynamicBones();
+        //buildGameObject.AddCustomAvatarDynamicBoneColliders();
 
         buildGameObjectAnimator.runtimeAnimatorController = null;
 
@@ -281,10 +281,6 @@ public class CustomAvatarMapper : MonoBehaviour
         {
             DestroyImmediate(itemCollisionHandler);
         }
-
-        item.rb.isKinematic = true;
-        item.preview.transform.position = buildGameObjectAnimator.GetBoneTransform(HumanBodyBones.Head).position;
-        item.preview.transform.localRotation = Quaternion.Euler(0, 180, 0);
         var customAvatar = itemGameObject.AddComponent<CustomAvatar>();
         customAvatar.animator = buildGameObjectAnimator;
 
